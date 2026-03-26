@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\Comment;
 use App\Models\School;
 use App\Models\AmbassadorPost;
+use App\Models\TrialRequest;
 use App\Models\User;
 
 class MyPageController extends Controller
@@ -16,10 +17,9 @@ class MyPageController extends Controller
     {
         $user = auth()->user();
 
-        // 未ログインならプレビュー画面
+        // 未ログインならログイン誘導画面
         if (!$user) {
-            $schools = School::orderBy('name')->get();
-            return view('mypage.guest', compact('schools'));
+            return view('mypage.index');
         }
 
         $user->load('mySchool');
@@ -29,6 +29,16 @@ class MyPageController extends Controller
         $commentCount = Comment::where('user_id', $user->id)->count();
 
         $schools = School::orderBy('name')->get();
+
+        // 自分が投稿したスポット
+        $mySpots = Spot::where('user_id', $user->id)->latest()->take(10)->get();
+
+        // アンバサダー: 未対応の体験申込数
+        $pendingTrialCount = 0;
+        if ($user->isAmbassador()) {
+            $pendingTrialCount = TrialRequest::where('ambassador_user_id', $user->id)
+                ->where('status', 'pending')->count();
+        }
 
         // お気に入りスポット（距離情報付き）
         $favorites = $user->favoriteSpots()->with(['reviews'])->get();
@@ -61,7 +71,7 @@ class MyPageController extends Controller
 
         return view('mypage.index', compact(
             'user', 'spotCount', 'questionCount', 'commentCount',
-            'schools', 'favorites', 'nearbyPosts'
+            'schools', 'favorites', 'nearbyPosts', 'mySpots', 'pendingTrialCount'
         ));
     }
 
@@ -69,7 +79,7 @@ class MyPageController extends Controller
     {
         $request->validate(['school_id' => 'nullable|exists:schools,id']);
 
-        $user = auth()->user() ?? User::find(1);
+        $user = auth()->user();
         $user->update(['my_school_id' => $request->school_id]);
 
         return back()->with('success', '拠点校を設定しました！');
@@ -77,7 +87,7 @@ class MyPageController extends Controller
 
     public function toggleFavorite(Request $request, Spot $spot)
     {
-        $user = auth()->user() ?? User::find(1);
+        $user = auth()->user();
 
         $exists = $user->favoriteSpots()->where('spot_id', $spot->id)->exists();
 

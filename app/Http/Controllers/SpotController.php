@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Spot;
 use App\Models\Comment;
 use App\Models\Review;
+use App\Models\School;
 use Illuminate\Support\Facades\Storage;
 
 class SpotController extends Controller
@@ -20,7 +21,22 @@ class SpotController extends Controller
         $spots = $query->with(['reviews', 'latestAmbassadorPost'])
             ->withCount(['ambassadorPosts as osagari_count' => fn($q) => $q->where('has_osagari', true)])
             ->latest()->get();
-        return view('spots.index', compact('spots'));
+
+        // ユーザーのマイ・スクール情報を取得
+        $mySchool = null;
+        if (auth()->check() && auth()->user()->my_school_id) {
+            $mySchool = auth()->user()->mySchool;
+        }
+
+        $schools = School::all();
+
+        return view('spots.index', compact('spots', 'mySchool', 'schools'));
+    }
+
+    // スポット詳細 → マップのモーダルで表示するためリダイレクト
+    public function show(Spot $spot)
+    {
+        return redirect('/')->with('open_spot', $spot->id);
     }
 
     // 投稿画面
@@ -35,13 +51,31 @@ class SpotController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'lat' => 'required|numeric',
-            'lng' => 'required|numeric',
-            'category' => 'required|string',
-            'note' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'link_url' => 'nullable|url',
+            'lat' => 'required|numeric|between:-90,90',
+            'lng' => 'required|numeric|between:-180,180',
+            'category' => 'required|string|max:50',
+            'note' => 'nullable|string|max:2000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'link_url' => 'nullable|url|max:500',
+            'google_place_id' => 'nullable|string|max:300',
+            'monthly_fee_range' => 'nullable|string|max:50',
+            'policy_type' => 'nullable|string|max:20',
+            'age_range' => 'nullable|string|max:20',
+        ], [
+            'lat.between' => '有効な緯度を入力してください。地図上で位置を指定してください。',
+            'lng.between' => '有効な経度を入力してください。地図上で位置を指定してください。',
+            'lat.required' => '位置情報が取得できませんでした。地図上で場所を指定してください。',
+            'lng.required' => '位置情報が取得できませんでした。地図上で場所を指定してください。',
+            'title.required' => '場所の名前を入力してください。',
+            'category.required' => 'カテゴリを選択してください。',
         ]);
+
+        // 世田谷区周辺（東京都付近）の緯度経度かチェック
+        $lat = (float) $request->lat;
+        $lng = (float) $request->lng;
+        if ($lat < 35.0 || $lat > 36.0 || $lng < 139.0 || $lng > 140.5) {
+            return back()->withErrors(['lat' => '世田谷区周辺の位置を指定してください。位置情報が正しくない可能性があります。'])->withInput();
+        }
 
         // --- 重複チェック ---
         $existing = null;
@@ -87,13 +121,8 @@ class SpotController extends Controller
             if ($request->filled('note')) {
                 Review::create([
                     'spot_id' => $existing->id,
-                    'user_id' => auth()->id() ?? 1,
+                    'user_id' => auth()->id(), // ゲストの場合は null
                     'body' => $request->note,
-                    'satisfaction' => 3,
-                    'skill_growth' => 3,
-                    'cost_performance' => 3,
-                    'teacher_passion' => 3,
-                    'parent_burden' => 3,
                     'vibe_tag' => 'エンジョイ勢',
                 ]);
             }
@@ -103,8 +132,8 @@ class SpotController extends Controller
         }
 
         // --- 新規登録 ---
-        $data = $request->only(['title', 'lat', 'lng', 'category', 'note', 'link_url', 'google_place_id', 'monthly_fee_range', 'policy_type', 'age_range']);
-        $data['user_id'] = auth()->id() ?? 1;
+        $data = $request->only(['title', 'lat', 'lng', 'category', 'note', 'link_url', 'google_place_id', 'monthly_fee_range', 'policy_type', 'age_range', 'parent_role']);
+        $data['user_id'] = auth()->id(); // ゲストの場合は null
         $data['has_parent_duty'] = $request->boolean('has_parent_duty');
         $data['transfer_available'] = $request->boolean('transfer_available');
 
@@ -118,32 +147,24 @@ class SpotController extends Controller
             ->with('success', 'スポットを登録しました！');
     }
 
-    // レビュー投稿
+    // レビュー投稿 — v1: 3ステップ体験レポート（雰囲気・価格帯・一言）
     public function storeReview(Request $request, Spot $spot)
     {
         $request->validate([
             'vibe_tag' => 'required|string',
-            'satisfaction' => 'required|integer|min:1|max:5',
-            'skill_growth' => 'required|integer|min:1|max:5',
-            'cost_performance' => 'required|integer|min:1|max:5',
-            'teacher_passion' => 'required|integer|min:1|max:5',
-            'parent_burden' => 'required|integer|min:1|max:5',
-            'body' => 'required|string|max:2000',
+            'monthly_fee' => 'required|integer',
+            'body' => 'nullable|string|max:100',
         ]);
 
         Review::create([
             'spot_id' => $spot->id,
-            'user_id' => 1,
+            'user_id' => auth()->id(),
             'vibe_tag' => $request->vibe_tag,
-            'satisfaction' => $request->satisfaction,
-            'skill_growth' => $request->skill_growth,
-            'cost_performance' => $request->cost_performance,
-            'teacher_passion' => $request->teacher_passion,
-            'parent_burden' => $request->parent_burden,
+            'monthly_fee' => $request->monthly_fee,
             'body' => $request->body,
         ]);
 
-        return redirect()->route('spots.index')->with('success', '口コミを投稿しました！');
+        return redirect()->route('spots.index')->with('success', '体験レポートを投稿しました！');
     }
 
     // タイムライン一覧
@@ -167,7 +188,7 @@ class SpotController extends Controller
         $comment = Comment::create([
             'question_id' => $questionId,
             'body'        => $request->body,
-            'user_id'     => 1,
+            'user_id'     => auth()->id(),
         ]);
 
         if ($request->wantsJson() || $request->ajax()) {

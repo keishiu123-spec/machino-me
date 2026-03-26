@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-white min-h-screen pb-24">
+<div class="min-h-screen pb-24" style="background: var(--color-cream);">
 
     {{-- Header --}}
-    <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100/60 sticky top-[41px] bg-white/95 backdrop-blur-xl z-40">
-        <a href="{{ route('questions.index') }}" class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 hover:text-gray-600 active:scale-95 transition-all">
+    <div class="flex items-center justify-between px-5 py-3 sticky top-[41px] backdrop-blur-xl z-40" style="background: rgba(250,247,242,0.95); border-bottom: 0.5px solid var(--color-border);">
+        <a href="{{ route('questions.index') }}" class="w-10 h-10 rounded-xl flex items-center justify-center active:scale-95 transition-all" style="background: var(--color-white); color: var(--color-ink-soft);">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </a>
-        <h1 class="text-sm font-black text-gray-900">習い事について相談する</h1>
+        <h1 class="text-sm font-serif" style="color: var(--color-ink);">習い事について相談する</h1>
         <div class="w-10"></div>
     </div>
 

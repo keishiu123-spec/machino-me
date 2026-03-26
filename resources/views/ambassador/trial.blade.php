@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-surface-50 min-h-screen pb-24">
+<div class="min-h-screen pb-24" style="background: var(--color-cream);">
 
     {{-- Header --}}
-    <div class="bg-white border-b border-gray-100/60">
+    <div style="background: var(--color-white); border-bottom: 0.5px solid var(--color-border);">
         <div class="flex items-center gap-3 px-4 py-3">
-            <a href="{{ route('ambassador.show', $ambassador) }}" class="w-9 h-9 bg-gray-50 rounded-full flex items-center justify-center active:scale-90 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#374151" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <a href="{{ route('ambassador.show', $ambassador) }}" class="w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition-all" style="background: var(--color-cream);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#26304F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
             </a>
             <div>
-                <h1 class="text-sm font-black text-gray-900">体験を申し込む</h1>
+                <h1 class="text-sm font-serif" style="color: var(--color-ink);">体験を申し込む</h1>
                 <p class="text-[10px] text-gray-400 font-medium">{{ $ambassador->organization_name ?? $ambassador->name }}</p>
             </div>
         </div>

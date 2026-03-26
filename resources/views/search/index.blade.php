@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-md mx-auto bg-white min-h-screen pb-20">
+<div class="max-w-md mx-auto min-h-screen pb-20" style="background: var(--color-cream);">
     {{-- Header with search --}}
-    <header class="px-5 py-4 bg-white/95 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100">
-        <h1 class="text-lg font-black text-gray-900 mb-3">さがす</h1>
+    <header class="px-5 py-4 backdrop-blur-xl sticky top-0 z-50" style="background: rgba(250,247,242,0.95); border-bottom: 0.5px solid var(--color-border);">
+        <h1 class="text-lg font-serif mb-3" style="color: var(--color-ink);">さがす</h1>
         <form action="{{ route('search.index') }}" method="GET">
             <div class="relative">
                 <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="text" name="query" value="{{ $query ?? '' }}" placeholder="スポット・質問・通信を検索..."
-                    class="w-full bg-gray-50 rounded-xl pl-10 pr-4 py-3 text-sm font-medium outline-none border border-gray-100 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all">
+                    class="w-full rounded-xl pl-10 pr-4 py-3 text-sm outline-none transition-all" style="background: var(--color-white); border: 0.5px solid var(--color-border); color: var(--color-ink);">
             </div>
         </form>
     </header>

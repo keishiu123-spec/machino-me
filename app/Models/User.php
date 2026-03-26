@@ -16,9 +16,11 @@ class User extends Authenticatable
         'password',
         'role',
         'avatar_url',
+        'avatar',
         'bio',
         'organization_name',
         'my_school_id',
+        'line_id',
     ];
 
     protected $hidden = [
@@ -67,5 +69,10 @@ class User extends Authenticatable
     public function trialRequests()
     {
         return $this->hasMany(TrialRequest::class, 'ambassador_user_id');
+    }
+
+    public function getDisplayAvatarAttribute(): ?string
+    {
+        return $this->avatar ?: $this->avatar_url;
     }
 }

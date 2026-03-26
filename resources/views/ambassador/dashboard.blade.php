@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-surface-50 min-h-screen pb-24">
+<div class="min-h-screen pb-24" style="background: var(--color-cream);">
 
     {{-- Header --}}
-    <div class="bg-white border-b border-gray-100/60">
+    <div style="background: var(--color-white); border-bottom: 0.5px solid var(--color-border);">
         <div class="flex items-center justify-between px-4 py-3">
             <div>
-                <h1 class="text-base font-black text-gray-900">管理画面</h1>
+                <h1 class="text-base font-serif" style="color: var(--color-ink);">管理画面</h1>
                 <p class="text-[10px] text-gray-400 font-medium">{{ auth()->user()->organization_name ?? auth()->user()->name }}</p>
             </div>
             <a href="{{ route('ambassador.show', auth()->user()) }}" class="badge badge-amber active:scale-95 transition-all">

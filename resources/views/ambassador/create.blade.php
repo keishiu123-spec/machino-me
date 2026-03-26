@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-white min-h-screen pb-24">
+<div class="min-h-screen pb-24" style="background: var(--color-cream);">
 
     {{-- Header --}}
-    <div class="sticky top-[41px] z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100/60">
+    <div class="sticky top-[41px] z-40 backdrop-blur-xl" style="background: rgba(250,247,242,0.95); border-bottom: 0.5px solid var(--color-border);">
         <div class="px-4 py-3 flex items-center justify-between">
-            <a href="{{ route('ambassador.index') }}" class="text-gray-400 hover:text-gray-600 p-1">
+            <a href="{{ route('ambassador.index') }}" class="p-1" style="color: var(--color-ink-soft);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
             </a>
-            <h1 class="text-sm font-black text-gray-900">通信を投稿</h1>
+            <h1 class="text-sm font-serif" style="color: var(--color-ink);">通信を投稿</h1>
             <div class="w-8"></div>
         </div>
     </div>

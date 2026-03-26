@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-surface-50 min-h-screen pb-24">
+<div class="min-h-screen pb-24" style="background: var(--color-cream);">
 
     {{-- Profile Header --}}
-    <div class="relative bg-white">
+    <div class="relative" style="background: var(--color-white);">
         {{-- Cover --}}
         <div class="h-36 bg-gradient-to-br from-amber-200 via-orange-100 to-amber-50 overflow-hidden">
             @php $firstPost = $posts->first(); @endphp

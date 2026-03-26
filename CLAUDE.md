@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**KIDS COMPASS** — a Laravel 12 web app for parents in Setagaya ward to share local knowledge about kids' spots, safety info, Q&A, and ambassador communications from verified lesson providers. The project spec is in `shiyousyo.md` (Japanese).
+**みっけ（MIKKE）** — a Laravel 12 web app for parents in Setagaya ward to discover local kids' spots on a map. v1 focuses on spot registration, map browsing, and lightweight experience reports. The project spec is in `shiyousyo.md` (Japanese).
 
 ## Common Commands
 
@@ -19,46 +19,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Framework**: Laravel 12 (PHP 8.2+), Blade templates (no Inertia/Vue despite spec mentioning it)
 - **Database**: SQLite (default via `.env.example`), session/cache/queue all use `database` driver
-- **Frontend**: Blade views with Tailwind CSS (CDN), Google Maps JS API, Chart.js
+- **Frontend**: Blade views with Tailwind CSS (CDN), Google Maps JS API
 - **Maps**: Google Maps JavaScript API with AdvancedMarkerElement, Places, MarkerClusterer
 
 ### Key Models & Relationships
 - `User` — has `role` field (user/ambassador/admin), `organization_name`, `avatar_url`, `bio`
-- `Spot` — locations with lesson metadata. Has many `Review`s, `Comment`s, `AmbassadorPost`s. Has optional `ambassador_user_id` linking to the managing ambassador
-- `Review` — structured reviews with satisfaction/skill_growth/parent_burden ratings + vibe_tag
-- `Question` — community Q&A posts
-- `Comment` — belongs to questions
-- `AmbassadorPost` — belongs to User (ambassador) and Spot. Photo + short message + mood_tag
+- `Spot` — locations with lesson metadata. Has many `Review`s, `Comment`s, `AmbassadorPost`s
+- `Review` — v1: vibe_tag + monthly_fee (price range) + body (comment). Legacy 5-star columns are nullable.
+- `Question` — community Q&A posts (v2)
+- `Comment` — belongs to questions (v2)
+- `AmbassadorPost` — belongs to User (ambassador) and Spot (v2)
 
 ### Controllers
-- `SpotController` — map view (home page), spot CRUD, review & comment storage
-- `QuestionController` — Q&A timeline
-- `AmbassadorPostController` — public timeline (index) + ambassador-only posting (create/store)
-- `SearchController` — cross-model search (spots, questions, ambassador posts)
+- `SpotController` — map view (home page), spot CRUD, review storage
+- `QuestionController` — Q&A timeline (v2, routes commented out)
+- `AmbassadorPostController` — ambassador features (v2, routes commented out)
+- `SearchController` — cross-model search (v2, routes commented out)
 
-### Routes
+### Routes (v1 active)
 - `/` and `/spots` — map/spot listing (home)
-- `/questions` — Q&A timeline
-- `/ambassador` — public ambassador communications timeline
-- `/ambassador/create` — ambassador-only posting form (requires auth + ambassador role)
-- `/search` — search page
+- `/spots/create` — spot registration (auth required)
+- `/spots/{spot}/reviews` — experience report submission (auth required)
+- `/mypage` — user profile, favorites, my school setting
+- `/auth/line` — LINE login
 - `/dev/login-as/{userId}` — dev-only auto-login for testing
-- Comments posted via `POST /questions/{question}/comments`
+
+### Routes (v2, commented out)
+- `/questions` — Q&A timeline
+- `/ambassador` — public ambassador communications
+- `/search` — cross-model search
+- All ambassador-specific routes
 
 ### Authorization
-- `EnsureUserIsAmbassador` middleware — checks `role` is `ambassador` or `admin`
-- Ambassador routes use `['auth', EnsureUserIsAmbassador]` middleware stack
+- `EnsureUserIsAmbassador` middleware — checks `role` is `ambassador` or `admin` (v2)
 - Unauthenticated users redirect to `/` (configured in bootstrap/app.php)
 
 ### Views
-- `resources/views/layouts/app.blade.php` — shared layout with bottom nav (マップ/質問箱/通信/さがす)
-- Feature views under `spots/`, `questions/`, `ambassador/`, `search/`
+- `resources/views/layouts/app.blade.php` — shared layout with bottom nav (マップ / FAB / マイページ)
+- Feature views under `spots/`, `mypage/`
+- v2 views preserved but not active: `questions/`, `ambassador/`, `search/`
 
 ## Notes
 
-- User authentication uses Laravel's built-in session auth; general user_id is hardcoded to `1` for non-auth actions
-- Ambassador users (id 4-6) can be logged in via `/dev/login-as/{id}` for testing
+- User authentication uses Laravel's built-in session auth with LINE login
 - The app is in Japanese; UI text, comments, and the spec document are all in Japanese
 - Image uploads stored via `public` disk under `spots/` and `ambassador/` directories
 - Google Maps API key stored in `.env` as `GOOGLE_MAPS_API_KEY`, accessed via `config('services.google_maps.api_key')`
-- Events feature has been replaced by Ambassador Communications (アンバサダー通信)
+- v2 features (Q&A, ambassador, search, compare, radar chart) are commented out with `{{-- v2: ... --}}` or `/* v2: ... */` markers — do NOT delete these
+- Design tokens (indigo/ink, cream, coral, sage, gold) are maintained from the original design

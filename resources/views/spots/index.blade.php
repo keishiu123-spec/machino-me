@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-white min-h-screen pb-20 relative">
+<div class="relative" style="height: calc(100dvh - 58px);">
+
+    {{-- Map（画面全体に固定表示、ヘッダーの下） --}}
+    <div id="map" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>
 
     {{-- Search Bar --}}
-    <div class="absolute top-4 left-4 right-4 z-[1100]">
-        <div class="bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-white/60 overflow-visible">
+    <div class="absolute top-3 left-0 right-0 z-[1100] px-4">
+        <div class="backdrop-blur-xl overflow-visible" style="background: rgba(255,255,255,0.92); border-radius: var(--radius-card); border: 0.5px solid var(--color-border);">
             <div class="px-4 py-3 flex items-center gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input id="map-search" type="text" placeholder="スポットを検索..." autocomplete="off"
@@ -19,8 +22,8 @@
     </div>
 
     {{-- School Filter --}}
-    <div class="absolute top-[72px] left-0 right-0 z-[1002] px-4">
-        <div class="bg-white/90 backdrop-blur-xl rounded-xl shadow-sm border border-gray-100/60 px-3 py-2 flex items-center gap-2">
+    <div class="absolute top-[60px] left-0 right-0 z-[1002] px-4">
+        <div class="backdrop-blur-xl px-3 py-2 flex items-center gap-2" style="background: rgba(255,255,255,0.92); border-radius: var(--radius-input); border: 0.5px solid var(--color-border);">
             <span class="text-[10px] font-bold text-gray-500 flex-shrink-0">🏫</span>
             <select id="school-select" onchange="onSchoolChange()" class="text-xs font-bold text-gray-700 bg-transparent outline-none flex-1 min-w-0">
                 <option value="">小学校で絞り込み</option>
@@ -36,46 +39,47 @@
     </div>
 
     {{-- Category Filter --}}
-    <div class="absolute top-[116px] left-0 right-0 z-[1001] px-4">
+    <div class="absolute top-[104px] left-0 right-0 z-[1001] px-4">
         <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
             <button onclick="filterCategory('すべて')" class="cat-btn active flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="すべて">すべて</button>
             <button onclick="filterCategory('スポーツ少年団')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="スポーツ少年団">⚽ 少年団</button>
             <button onclick="filterCategory('個人教室')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="個人教室">🎹 個人教室</button>
             <button onclick="filterCategory('塾・学習')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="塾・学習">📚 塾・学習</button>
-            <button onclick="filterCategory('施設')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="施設">🏊 施設</button>
+            <button onclick="filterCategory('水泳・体操')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="水泳・体操">🏊 水泳・体操</button>
+            <button onclick="filterCategory('武道')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="武道">🥋 武道</button>
+            <button onclick="filterCategory('英語・語学')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="英語・語学">🌍 英語</button>
         </div>
     </div>
 
-    {{-- Toggle List View --}}
+    {{-- v2: Toggle List View
     <button id="toggle-list-btn" onclick="toggleListView()"
-        class="absolute top-[156px] right-4 z-[1002] w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center text-gray-500 hover:text-brand-600 active:scale-90 transition-all border border-gray-100">
+        class="absolute top-[156px] right-4 z-[1002] w-10 h-10 flex items-center justify-center active:scale-90 transition-all" style="background: var(--color-white); border-radius: var(--radius-input); border: 0.5px solid var(--color-border); color: var(--color-ink-mid);">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
     </button>
+    --}}
 
-    {{-- Map --}}
-    <div id="map" style="height:100vh;width:100%;"></div>
-
-    {{-- Sidebar Card List --}}
-    <div id="sidebar-list" class="fixed inset-x-0 bottom-[64px] z-[2500] mx-auto translate-y-full transition-transform duration-500 ease-out" style="max-width:430px;max-height:50vh;">
-        <div class="bg-white rounded-t-[24px] shadow-[0_-8px_40px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col" style="max-height:50vh;">
+    {{-- v2: Sidebar Card List（教室リストポップアップ）
+    <div id="sidebar-list" class="fixed inset-x-0 bottom-[64px] z-[2500] mx-auto transition-transform duration-500 ease-out" style="max-width:430px;max-height:50vh;transform:translateY(calc(100% + 64px));">
+        <div class="overflow-hidden flex flex-col" style="max-height:50vh; background: var(--color-white); border-radius: 24px 24px 0 0; border-top: 0.5px solid var(--color-border);">
             <div class="flex items-center justify-between px-5 pt-4 pb-2">
-                <p class="text-sm font-black text-gray-800">教室リスト</p>
+                <p class="text-sm font-serif" style="color: var(--color-ink);">教室リスト</p>
                 <button onclick="toggleListView()" class="text-gray-400 hover:text-gray-600 p-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="14" y1="4" x2="4" y2="14"/><line x1="4" y1="4" x2="14" y2="14"/></svg></button>
             </div>
             <div id="sidebar-cards" class="overflow-y-auto overscroll-contain px-4 pb-4 space-y-3"></div>
         </div>
     </div>
+    --}}
 
-    {{-- Compare Floating Bar --}}
+    {{-- v2: Compare Floating Bar（比較モード）
     <div id="compare-bar" class="fixed bottom-[80px] left-4 right-4 z-[2600] max-w-md mx-auto hidden">
-        <div class="bg-brand-600 text-white rounded-2xl shadow-[0_8px_32px_rgba(34,197,94,0.4)] px-4 py-3 flex items-center justify-between">
+        <div class="text-white px-4 py-3 flex items-center justify-between" style="background: var(--color-ink); border-radius: var(--radius-card); border: 0.5px solid var(--color-border);">
             <div class="flex items-center gap-2">
-                <span class="text-sm font-bold" id="compare-count">0</span>
+                <span class="text-sm font-medium" id="compare-count">0</span>
                 <span class="text-xs opacity-80">件選択中</span>
             </div>
             <div class="flex gap-2">
-                <button onclick="openCompareView()" class="bg-white text-brand-700 px-4 py-1.5 rounded-xl text-xs font-bold active:scale-95 transition-all">比較する</button>
-                <button onclick="clearCompare()" class="bg-brand-700 px-3 py-1.5 rounded-xl text-xs font-bold active:scale-95 transition-all">クリア</button>
+                <button onclick="openCompareView()" class="px-4 py-1.5 text-xs font-medium active:scale-95 transition-all" style="background: var(--color-coral); color: white; border-radius: var(--radius-pill);">比較する</button>
+                <button onclick="clearCompare()" class="px-3 py-1.5 text-xs font-medium active:scale-95 transition-all" style="background: rgba(255,255,255,0.15); border-radius: var(--radius-pill);">クリア</button>
             </div>
         </div>
     </div>
@@ -84,26 +88,27 @@
     <div id="compare-overlay" class="fixed inset-0 z-[7000] hidden">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeCompareView()"></div>
         <div class="absolute inset-x-0 bottom-0 max-w-md mx-auto">
-            <div class="bg-white rounded-t-[28px] shadow-[0_-16px_60px_rgba(0,0,0,0.2)] max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="max-h-[90vh] overflow-hidden flex flex-col" style="background: var(--color-white); border-radius: 28px 28px 0 0; border-top: 0.5px solid var(--color-border);">
                 <div class="flex items-center justify-between px-5 pt-5 pb-3">
-                    <h3 class="text-base font-black text-gray-900">📊 教室を比較</h3>
+                    <h3 class="text-base font-serif" style="color: var(--color-ink);">📊 教室を比較</h3>
                     <button onclick="closeCompareView()" class="text-gray-400 hover:text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="14" y1="5" x2="5" y2="14"/><line x1="5" y1="5" x2="14" y2="14"/></svg></button>
                 </div>
                 <div id="compare-body" class="flex-1 overflow-y-auto overscroll-contain px-5 pb-8"></div>
             </div>
         </div>
     </div>
+    --}}
 
     {{-- Detail Modal --}}
-    <div id="detail-overlay" class="fixed inset-0 z-[5000]" style="pointer-events:none;">
+    <div id="detail-overlay" class="fixed inset-0 z-[5000]" style="pointer-events:none;visibility:hidden;">
         <div id="detail-backdrop" class="absolute inset-0 bg-black/0 transition-all duration-400" style="pointer-events:none;" onclick="closeDetail()"></div>
         <div id="detail-card" class="absolute inset-x-0 bottom-0 z-10" style="max-width:430px;margin:0 auto;transform:translateY(100%);transition:transform 0.45s cubic-bezier(0.32,0.72,0,1);pointer-events:none;">
-            <div class="bg-white rounded-t-[28px] shadow-[0_-16px_60px_rgba(0,0,0,0.18)] max-h-[88vh] overflow-hidden flex flex-col">
+            <div class="flex flex-col" style="max-height: calc(92dvh - env(safe-area-inset-bottom, 0px)); background: var(--color-white); border-radius: 28px 28px 0 0; border-top: 0.5px solid var(--color-border);">
                 {{-- Drag handle --}}
-                <div id="detail-drag-handle" class="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing">
+                <div id="detail-drag-handle" class="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing flex-shrink-0">
                     <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
                 </div>
-                <div id="detail-hero" class="relative w-full overflow-hidden" style="min-height:220px;">
+                <div id="detail-hero" class="relative w-full overflow-hidden flex-shrink-0" style="min-height:200px;">
                     <div id="hero-bg" class="absolute inset-0"></div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                     <button id="detail-close-btn" class="absolute top-3 right-3 w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-all active:scale-90 z-10">
@@ -114,112 +119,124 @@
                         <h2 id="hero-title" class="text-2xl font-black text-white leading-tight drop-shadow-lg"></h2>
                     </div>
                 </div>
-                <div id="detail-body" class="flex-1 overflow-y-auto overscroll-contain px-5 pt-5 pb-8"></div>
+                <div id="detail-body" class="flex-1 overflow-y-auto overscroll-contain px-5 pt-5" style="padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));"></div>
             </div>
         </div>
     </div>
 
-    {{-- Review Modal --}}
+    {{-- Review Modal — v1: 30秒・3ステップ体験レポート --}}
     <div id="review-overlay" class="fixed inset-0 z-[6000] hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeReviewForm()"></div>
         <div class="absolute inset-x-0 bottom-0 max-w-md mx-auto">
-            <div class="bg-white rounded-t-[28px] shadow-[0_-16px_60px_rgba(0,0,0,0.2)] p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-base font-black text-gray-900">この教室の暗黙知を共有する</h3>
+            <div class="p-6" style="background: var(--color-white); border-radius: 28px 28px 0 0; border-top: 0.5px solid var(--color-border);">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="text-base font-serif" style="color: var(--color-ink);">体験レポート</h3>
                     <button onclick="closeReviewForm()" class="text-gray-400 hover:text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="14" y1="5" x2="5" y2="14"/><line x1="5" y1="5" x2="14" y2="14"/></svg></button>
                 </div>
-                <form id="review-form" method="POST" class="space-y-4">
+                <form id="review-form" method="POST" class="space-y-5">
                     @csrf
                     <input type="hidden" name="spot_id" id="review-spot-id">
+
+                    {{-- Step 1: 雰囲気タグ --}}
                     <div>
-                        <label class="text-xs font-bold text-gray-500 mb-2 block">あなたはどのタイプ？ <span class="text-red-500">*必須</span></label>
+                        <label class="text-xs font-bold mb-2 block" style="color: var(--color-ink-mid);">Step 1｜雰囲気は？ <span class="text-red-500">*必須</span></label>
                         <div class="grid grid-cols-2 gap-2">
-                            @foreach(['ガチ勢','エンジョイ勢','のびのび系','受験特化'] as $vibe)
+                            @foreach(['のびのび系','ガチ勢','エンジョイ勢','受験特化'] as $vibe)
                             <label>
-                                <input type="radio" name="vibe_tag" value="{{ $vibe }}" class="hidden peer" {{ $loop->index===1?'checked':'' }}>
-                                <div class="peer-checked:bg-brand-500 peer-checked:text-white peer-checked:border-brand-500 bg-gray-50 text-gray-600 border border-gray-200 rounded-xl py-2.5 text-center text-xs font-bold cursor-pointer transition-all active:scale-95">{{ $vibe }}</div>
+                                <input type="radio" name="vibe_tag" value="{{ $vibe }}" class="hidden peer" {{ $loop->first?'checked':'' }}>
+                                <div class="peer-checked:border-coral peer-checked:bg-coral-light peer-checked:text-coral bg-gray-50 border rounded-xl py-3 text-center text-sm font-bold cursor-pointer transition-all active:scale-95" style="border-color: var(--color-border); color: var(--color-ink-mid);">{{ $vibe }}</div>
                             </label>
                             @endforeach
                         </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-500 mb-1 block text-center">満足度</label>
-                            <select name="satisfaction" class="w-full bg-gray-50 rounded-lg px-2 py-2 text-sm text-center border border-gray-200 font-bold">
-                                @for($i=5;$i>=1;$i--)<option value="{{$i}}">{{str_repeat('★',$i)}}{{str_repeat('☆',5-$i)}}</option>@endfor
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-500 mb-1 block text-center">上達度</label>
-                            <select name="skill_growth" class="w-full bg-gray-50 rounded-lg px-2 py-2 text-sm text-center border border-gray-200 font-bold">
-                                @for($i=5;$i>=1;$i--)<option value="{{$i}}">{{str_repeat('★',$i)}}{{str_repeat('☆',5-$i)}}</option>@endfor
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-500 mb-1 block text-center">コスパ</label>
-                            <select name="cost_performance" class="w-full bg-gray-50 rounded-lg px-2 py-2 text-sm text-center border border-gray-200 font-bold">
-                                @for($i=5;$i>=1;$i--)<option value="{{$i}}">{{str_repeat('★',$i)}}{{str_repeat('☆',5-$i)}}</option>@endfor
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-500 mb-1 block text-center">先生の熱意</label>
-                            <select name="teacher_passion" class="w-full bg-gray-50 rounded-lg px-2 py-2 text-sm text-center border border-gray-200 font-bold">
-                                @for($i=5;$i>=1;$i--)<option value="{{$i}}">{{str_repeat('★',$i)}}{{str_repeat('☆',5-$i)}}</option>@endfor
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-500 mb-1 block text-center">親の負担<span class="text-[8px] text-gray-400">（★多=楽）</span></label>
-                            <select name="parent_burden" class="w-full bg-gray-50 rounded-lg px-2 py-2 text-sm text-center border border-gray-200 font-bold">
-                                @for($i=5;$i>=1;$i--)<option value="{{$i}}">{{str_repeat('★',$i)}}{{str_repeat('☆',5-$i)}}</option>@endfor
-                            </select>
-                        </div>
-                    </div>
+
+                    {{-- Step 2: 価格帯 --}}
                     <div>
-                        <label class="text-xs font-bold text-gray-500 mb-1 block">口コミ（親のリアルな声）</label>
-                        <textarea name="body" rows="3" placeholder="実際に通ってみて分かったこと、公式HPに載ってない情報を教えてください"
-                            class="w-full bg-gray-50 rounded-xl px-4 py-3 text-sm outline-none border border-gray-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 resize-none" required></textarea>
+                        <label class="text-xs font-bold mb-2 block" style="color: var(--color-ink-mid);">Step 2｜価格帯は？ <span class="text-red-500">*必須</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            @php $prices = [['val'=>'0','label'=>'〜3,000円'],['val'=>'3000','label'=>'3,000〜6,000円'],['val'=>'6000','label'=>'6,000〜10,000円'],['val'=>'10000','label'=>'10,000円〜']]; @endphp
+                            @foreach($prices as $price)
+                            <label>
+                                <input type="radio" name="monthly_fee" value="{{ $price['val'] }}" class="hidden peer" {{ $loop->first?'checked':'' }}>
+                                <div class="peer-checked:border-coral peer-checked:bg-coral-light peer-checked:text-coral bg-gray-50 border rounded-xl py-3 text-center text-sm font-bold cursor-pointer transition-all active:scale-95" style="border-color: var(--color-border); color: var(--color-ink-mid);">{{ $price['label'] }}</div>
+                            </label>
+                            @endforeach
+                        </div>
                     </div>
+
+                    {{-- Step 3: 一言コメント --}}
+                    <div>
+                        <label class="text-xs font-bold mb-2 block" style="color: var(--color-ink-mid);">Step 3｜一言コメント <span class="text-gray-400">（任意・100文字まで）</span></label>
+                        <textarea name="body" rows="2" maxlength="100" placeholder="先生がとても優しくて子どもが毎回楽しそうに通っています"
+                            class="w-full bg-gray-50 rounded-xl px-4 py-3 text-sm outline-none border transition-all resize-none" style="border-color: var(--color-border); color: var(--color-ink);"></textarea>
+                    </div>
+
                     <button type="submit"
-                        class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-2xl shadow-[0_8px_24px_rgba(34,197,94,0.3)] active:scale-[0.98] transition-all text-sm">
-                        口コミを投稿する
+                        class="w-full text-white font-medium py-3.5 active:scale-[0.98] transition-all text-sm" style="background: var(--color-coral); border-radius: var(--radius-pill); box-shadow: none;">
+                        体験レポートを送信
                     </button>
                 </form>
             </div>
         </div>
     </div>
+
+    {{-- v2: 旧5軸レビューフォーム（satisfaction, skill_growth, cost_performance, teacher_passion, parent_burden）は上記で置換済み --}}
 </div>
 
 <style>
-    #map { height: 100vh; width: 100%; }
+    #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
     .gm-style iframe + div { border: none !important; }
 
     .spot-pin {
         display: flex; flex-direction: column; align-items: center;
         cursor: pointer;
-        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.18));
+        filter: drop-shadow(0 3px 8px rgba(0,0,0,0.18));
         transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s, opacity 0.4s;
     }
     .spot-pin:hover, .spot-pin.active {
-        transform: scale(1.12) translateY(-4px);
+        transform: scale(1.15) translateY(-4px);
         filter: drop-shadow(0 8px 20px rgba(0,0,0,0.28));
         z-index: 9999 !important;
     }
-    .spot-pin.faded { opacity: 0.2; pointer-events: none; }
+    .spot-pin.faded { opacity: 0.15; pointer-events: none; }
     .spot-pin-photo {
-        width: 64px; height: 64px; border-radius: 50%;
+        width: 52px; height: 52px; border-radius: 50%;
         overflow: hidden; border: 3px solid white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        position: relative;
     }
     .spot-pin-photo img { width: 100%; height: 100%; object-fit: cover; }
     .spot-pin-photo-placeholder {
         width: 100%; height: 100%;
-        display: flex; align-items: center; justify-content: center; font-size: 28px;
+        display: flex; align-items: center; justify-content: center; font-size: 22px;
     }
-    .spot-pin-tail { width: 12px; height: 12px; transform: rotate(45deg); margin-top: -7px; border-radius: 0 0 3px 0; }
-    .spot-pin-label { margin-top: 2px; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; color: #1e293b; background: white; box-shadow: 0 1px 6px rgba(0,0,0,0.1); text-align: center; white-space: nowrap; }
-    .spot-pin-badges { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; justify-content: center; }
+    .spot-pin-tail { width: 10px; height: 10px; transform: rotate(45deg); margin-top: -6px; border-radius: 0 0 2px 0; }
+    .spot-pin-label {
+        margin-top: 1px; padding: 2px 7px; border-radius: 6px;
+        font-size: 9px; font-weight: 800; color: #1e293b;
+        background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        text-align: center; white-space: nowrap;
+        max-width: 90px; overflow: hidden; text-overflow: ellipsis;
+    }
+    /* Mini icon dots — always visible, compact */
+    .spot-pin-dots {
+        display: flex; gap: 3px; margin-top: 2px; align-items: center; justify-content: center;
+    }
+    .spot-pin-dot {
+        width: 14px; height: 14px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 8px; line-height: 1;
+        background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    /* Expanded badges — only on hover/active */
+    .spot-pin-badges {
+        display: none; gap: 2px; margin-top: 3px; flex-wrap: wrap; justify-content: center;
+        max-width: 140px;
+    }
+    .spot-pin:hover .spot-pin-badges,
+    .spot-pin.active .spot-pin-badges { display: flex; }
+    .spot-pin:hover .spot-pin-dots,
+    .spot-pin.active .spot-pin-dots { display: none; }
     .spot-pin-badge { padding: 1px 5px; border-radius: 6px; font-size: 8px; font-weight: 800; background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.08); white-space: nowrap; }
     .spot-pin-amb-badge { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; border: 1px solid #f59e0b; }
     .spot-pin-amb-glow {
@@ -295,31 +312,31 @@
     }
     .spot-pin.bouncing { animation: pinBounce 0.6s ease; }
 
-    .cat-btn { background: white; color: #6b7280; border-color: #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .cat-btn.active { background: #14532d; color: white; border-color: #14532d; box-shadow: 0 4px 12px rgba(20,83,45,0.3); }
+    .cat-btn { background: var(--color-white); color: var(--color-ink-mid); border-color: var(--color-border); box-shadow: none; }
+    .cat-btn.active { background: var(--color-ink); color: var(--color-cream); border-color: var(--color-ink); box-shadow: none; }
 
-    .dist-btn.active { background: #22c55e; color: white; }
+    .dist-btn.active { background: var(--color-coral); color: white; }
 
-    #sidebar-list.open { transform: translateY(0); }
+    #sidebar-list.open { transform: translateY(0) !important; }
 
     .search-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: background 0.15s; }
-    .search-item:hover { background: #f0fdf4; }
-    .search-item:not(:last-child) { border-bottom: 1px solid #f3f4f6; }
+    .search-item:hover { background: var(--color-coral-light); }
+    .search-item:not(:last-child) { border-bottom: 0.5px solid var(--color-border); }
     .search-thumb { width: 40px; height: 40px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-    .tag-pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #f0fdf4; color: #15803d; }
-    .info-card { background: #f9fafb; border-radius: 16px; padding: 14px; text-align: center; }
+    .tag-pill { display: inline-block; padding: 4px 12px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 500; background: var(--color-coral-light); color: var(--color-coral); }
+    .info-card { background: var(--color-cream); border-radius: var(--radius-card); padding: 14px; text-align: center; }
     .lesson-badge { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; }
 
     .sidebar-card {
-        display: flex; gap: 12px; padding: 12px; background: white;
-        border: 1px solid #f3f4f6; border-radius: 16px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        display: flex; gap: 12px; padding: 12px; background: var(--color-white);
+        border: 0.5px solid var(--color-border); border-radius: var(--radius-card);
+        box-shadow: none;
+        cursor: pointer; transition: transform 0.2s;
     }
-    .sidebar-card:hover { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .sidebar-card:hover { transform: scale(1.02); }
     .sidebar-card:active { transform: scale(0.98); }
-    .sidebar-card.compare-selected { border-color: #22c55e; box-shadow: 0 0 0 2px rgba(34,197,94,0.3); }
+    .sidebar-card.compare-selected { border-color: var(--color-coral); box-shadow: 0 0 0 1px var(--color-coral); }
     .sidebar-card-thumb {
         width: 72px; height: 72px; border-radius: 14px; overflow: hidden; flex-shrink: 0;
         display: flex; align-items: center; justify-content: center;
@@ -341,7 +358,14 @@ function toggleFavorite(spotId, btn) {
     fetch('/spots/' + spotId + '/favorite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfTokenSpot, 'Accept': 'application/json' }
-    }).then(function(r){ return r.json(); }).then(function(data){
+    }).then(function(r){
+        if (r.status === 401 || r.redirected) {
+            alert('お気に入り機能はLINEログイン後にご利用いただけます');
+            return null;
+        }
+        return r.json();
+    }).then(function(data){
+        if (!data) return;
         if (data.status === 'added') {
             favSet.add(spotId);
             btn.innerHTML = '💛 お気に入り済';
@@ -373,28 +397,62 @@ function initApp() {
             { featureType: 'poi', stylers: [{ visibility: 'off' }] },
             { featureType: 'transit', stylers: [{ visibility: 'off' }] }
         ],
-        mapId: 'KIDS_COMPASS'
+        mapId: 'MIKKE_MAP'
     });
 
     var catPalette = {
         'スポーツ少年団': { emoji:'⚽', border:'#f59e0b', bg:'#fef3c7', fg:'#92400e', grad:'linear-gradient(135deg,#fbbf24,#f59e0b)' },
         '個人教室':      { emoji:'🎹', border:'#a855f7', bg:'#f3e8ff', fg:'#6b21a8', grad:'linear-gradient(135deg,#c084fc,#9333ea)' },
         '塾・学習':      { emoji:'📚', border:'#3b82f6', bg:'#dbeafe', fg:'#1e40af', grad:'linear-gradient(135deg,#60a5fa,#2563eb)' },
+        '水泳・体操':    { emoji:'🏊', border:'#06b6d4', bg:'#cffafe', fg:'#155e75', grad:'linear-gradient(135deg,#22d3ee,#0891b2)' },
+        '武道':          { emoji:'🥋', border:'#dc2626', bg:'#fee2e2', fg:'#991b1b', grad:'linear-gradient(135deg,#f87171,#dc2626)' },
+        '英語・語学':    { emoji:'🌍', border:'#059669', bg:'#d1fae5', fg:'#065f46', grad:'linear-gradient(135deg,#34d399,#059669)' },
         '施設':          { emoji:'🏊', border:'#06b6d4', bg:'#cffafe', fg:'#155e75', grad:'linear-gradient(135deg,#22d3ee,#0891b2)' }
     };
     var defPal = { emoji:'📍', border:'#94a3b8', bg:'#f1f5f9', fg:'#475569', grad:'linear-gradient(135deg,#94a3b8,#64748b)' };
     function getPal(cat) { if(!cat) return defPal; for(var k in catPalette){ if(cat.indexOf(k)!==-1) return catPalette[k]; } return defPal; }
 
     var allSpots = @json($spots);
+    var mySchool = @json($mySchool);
+    var allSchools = @json($schools ?? []);
     var gMarkers = []; // google.maps.marker.AdvancedMarkerElement or overlay
     var markerMap = {};
     var activeCardEl = null;
     var clusterer = null;
 
+    // 徒歩分数計算（80m/分）
+    function walkingMinutes(lat1, lng1, lat2, lng2) {
+        var distKm = haversine(lat1, lng1, lat2, lng2);
+        return Math.round(distKm * 1000 / 80);
+    }
+
+    function findNearestSchool(spotLat, spotLng) {
+        var nearest = null, nearestDist = Infinity;
+        allSchools.forEach(function(s) {
+            if (!s.lat || !s.lng) return;
+            var d = haversine(parseFloat(s.lat), parseFloat(s.lng), spotLat, spotLng);
+            if (d < nearestDist) { nearestDist = d; nearest = s; }
+        });
+        return nearest;
+    }
+
+    function getWalkingBadge(spot) {
+        var school = mySchool;
+        if ((!school || !school.lat) && allSchools.length > 0) {
+            school = findNearestSchool(parseFloat(spot.lat), parseFloat(spot.lng));
+        }
+        if (!school || !school.lat || !school.lng) return '';
+        var mins = walkingMinutes(school.lat, school.lng, parseFloat(spot.lat), parseFloat(spot.lng));
+        var color = mins <= 10 ? '#16a34a' : mins <= 20 ? '#d97706' : '#dc2626';
+        var bg = mins <= 10 ? '#dcfce7' : mins <= 20 ? '#fef3c7' : '#fee2e2';
+        var label = (mySchool && mySchool.id === school.id) ? mySchool.name : school.name + '(最寄り)';
+        return '<span style="display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:800;background:'+bg+';color:'+color+';">🏫 '+label+'から徒歩'+mins+'分</span>';
+    }
+
     // ==========================================
     // Schools
     // ==========================================
-    var schools = [
+    var schools = allSchools.length > 0 ? allSchools : [
         { name: '弦巻小学校', lat: 35.63971, lng: 139.65300 },
         { name: '桜小学校', lat: 35.64299, lng: 139.64535 },
         { name: '駒沢小学校', lat: 35.63306, lng: 139.65802 },
@@ -519,15 +577,29 @@ function initApp() {
         var ph = photo ? '<img src="'+photo+'" alt="">' : '<div class="spot-pin-photo-placeholder" style="background:'+pal.grad+';"><span>'+pal.emoji+'</span></div>';
         var hasAmbPost = spot.latest_ambassador_post;
         var ambIndicator = hasAmbPost ? '<div class="spot-pin-amb-glow"></div>' : '';
-        var badges = '', items = [];
-        if(hasAmbPost) items.push('<span class="spot-pin-badge spot-pin-amb-badge">⭐ 通信あり</span>');
-        if(spot.monthly_fee_range) items.push('<span class="spot-pin-badge" style="color:#b45309;">💰'+spot.monthly_fee_range+'</span>');
-        if(spot.has_parent_duty) items.push('<span class="spot-pin-badge" style="color:#dc2626;">当番あり</span>');
-        else items.push('<span class="spot-pin-badge" style="color:#16a34a;">当番なし</span>');
-        if(spot.transfer_available) items.push('<span class="spot-pin-badge" style="color:#2563eb;">振替OK</span>');
-        if(spot.osagari_count > 0) items.push('<span class="spot-pin-badge" style="background:#dcfce7;color:#15803d;border:1px solid #86efac;">🎁 お下がり有</span>');
-        if(items.length) badges = '<div class="spot-pin-badges">'+items.join('')+'</div>';
-        return '<div class="spot-pin" data-id="'+spot.id+'">'+ambIndicator+'<div class="spot-pin-photo" style="border-color:'+(hasAmbPost?'#f59e0b':pal.border)+';">'+ph+'</div><div class="spot-pin-tail" style="background:'+(hasAmbPost?'#f59e0b':pal.border)+';"></div><div class="spot-pin-label">'+spot.title+'</div>'+badges+'</div>';
+
+        // Compact dots (always visible)
+        var dots = [];
+        if(hasAmbPost) dots.push('<span class="spot-pin-dot" style="background:#fef3c7;" title="通信あり">⭐</span>');
+        if(spot.has_parent_duty) dots.push('<span class="spot-pin-dot" style="background:#fee2e2;" title="当番あり">📋</span>');
+        if(spot.osagari_count > 0) dots.push('<span class="spot-pin-dot" style="background:#dcfce7;" title="お下がり有">🎁</span>');
+        var dotsHtml = dots.length ? '<div class="spot-pin-dots">'+dots.join('')+'</div>' : '';
+
+        // Full badges (shown on hover/active)
+        var badges = [], badgeItems = [];
+        if(hasAmbPost) badgeItems.push('<span class="spot-pin-badge spot-pin-amb-badge">⭐ 通信</span>');
+        if(spot.monthly_fee_range) badgeItems.push('<span class="spot-pin-badge" style="color:#b45309;">💰'+spot.monthly_fee_range+'</span>');
+        if(spot.has_parent_duty) badgeItems.push('<span class="spot-pin-badge" style="color:#dc2626;">当番あり</span>');
+        if(spot.transfer_available) badgeItems.push('<span class="spot-pin-badge" style="color:#2563eb;">振替OK</span>');
+        if(spot.osagari_count > 0) badgeItems.push('<span class="spot-pin-badge" style="background:#dcfce7;color:#15803d;">🎁 お下がり</span>');
+        var badgesHtml = badgeItems.length ? '<div class="spot-pin-badges">'+badgeItems.join('')+'</div>' : '';
+
+        return '<div class="spot-pin" data-id="'+spot.id+'">'+ambIndicator+
+            '<div class="spot-pin-photo" style="border-color:'+(hasAmbPost?'#f59e0b':pal.border)+';">'+ph+'</div>'+
+            '<div class="spot-pin-tail" style="background:'+(hasAmbPost?'#f59e0b':pal.border)+';"></div>'+
+            '<div class="spot-pin-label">'+spot.title+'</div>'+
+            dotsHtml + badgesHtml +
+            '</div>';
     }
 
     function createPinElement(spot, pal, photo, faded) {
@@ -610,7 +682,7 @@ function initApp() {
             clusterableMarkers.forEach(function(m) { m.map = map; });
         }
 
-        buildSidebarCards(filter);
+        /* v2: buildSidebarCards(filter); */
     }
 
     // === Bounce a pin ===
@@ -896,6 +968,7 @@ function initApp() {
         var tags = spot.category_tags||[], timeAgo = spot.created_at?timeSince(new Date(spot.created_at)):'たった今';
         var body = '';
 
+        /* v2: 月謝・当番・振替・指導方針バッジ
         var lb = [];
         if(spot.monthly_fee_range) lb.push('<div class="lesson-badge" style="background:#fef3c7;color:#92400e;">💰 '+spot.monthly_fee_range+'</div>');
         if(spot.has_parent_duty) lb.push('<div class="lesson-badge" style="background:#fee2e2;color:#dc2626;">📋 当番あり</div>');
@@ -909,8 +982,23 @@ function initApp() {
         else lb.push('<div class="lesson-badge" style="background:#f3f4f6;color:#6b7280;">🔄 振替不可</div>');
         if(spot.osagari_count > 0) lb.push('<div class="lesson-badge" style="background:#dcfce7;color:#15803d;border:1px solid #86efac;">🎁 お下がり有</div>');
         body += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">'+lb.join('')+'</div>';
+        */
+
+        // マイ・スクールからの徒歩分数
+        var walkBadge = getWalkingBadge(spot);
+        if (walkBadge) {
+            body += '<div style="margin-bottom:12px;">'+walkBadge+'</div>';
+        }
 
         var infos = [];
+        var detailSchool = mySchool;
+        if ((!detailSchool || !detailSchool.lat) && allSchools.length > 0) {
+            detailSchool = findNearestSchool(parseFloat(spot.lat), parseFloat(spot.lng));
+        }
+        if (detailSchool && detailSchool.lat) {
+            var wMins = walkingMinutes(detailSchool.lat, detailSchool.lng, parseFloat(spot.lat), parseFloat(spot.lng));
+            infos.push('<div class="info-card" style="background:'+(wMins<=10?'#f0fdf4':wMins<=20?'#fffbeb':'#fef2f2')+';"><p style="font-size:20px;margin-bottom:2px;">🚶</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">学校から</p><p style="font-size:16px;font-weight:900;color:'+(wMins<=10?'#16a34a':wMins<=20?'#d97706':'#dc2626')+';">'+wMins+'<span style="font-size:11px;">分</span></p></div>');
+        }
         if(spot.age_range) infos.push('<div class="info-card"><p style="font-size:20px;margin-bottom:2px;">🎒</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">対象年齢</p><p style="font-size:13px;font-weight:900;color:#1f2937;">'+spot.age_range+'歳</p></div>');
         if(spot.parent_role) infos.push('<div class="info-card"><p style="font-size:20px;margin-bottom:2px;">👨‍👩‍👧</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">親の役割</p><p style="font-size:11px;font-weight:800;color:#1f2937;">'+spot.parent_role+'</p></div>');
         infos.push('<div class="info-card"><p style="font-size:20px;margin-bottom:2px;">🕐</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">投稿</p><p style="font-size:13px;font-weight:900;color:#1f2937;">'+timeAgo+'</p></div>');
@@ -922,42 +1010,28 @@ function initApp() {
 
         var reviews = spot.reviews||[];
         if(reviews.length) {
-            var axes = ['satisfaction','skill_growth','cost_performance','teacher_passion','parent_burden'];
-            var axisLabels = ['満足度','上達度','コスパ','先生の熱意','親の負担\n(★多=楽)'];
-            var sums = [0,0,0,0,0], counts = [0,0,0,0,0];
-            reviews.forEach(function(r){ axes.forEach(function(a,i){ if(r[a]){ sums[i]+=r[a]; counts[i]++; } }); });
-            var avgs = sums.map(function(s,i){ return counts[i]?Math.round(s/counts[i]*10)/10:0; });
+            body += '<div style="margin-bottom:16px;"><p style="font-size:13px;font-weight:800;color:#374151;margin-bottom:10px;">📝 体験レポート（'+reviews.length+'件）</p>';
 
-            body += '<div style="margin-bottom:16px;"><p style="font-size:13px;font-weight:800;color:#374151;margin-bottom:10px;">📊 みんなのレビュー（'+reviews.length+'件）</p>';
-            body += '<div style="background:#f9fafb;border-radius:20px;padding:16px;margin-bottom:12px;text-align:center;"><canvas id="radar-chart" width="260" height="260" style="max-width:260px;margin:0 auto;"></canvas></div>';
+            var priceLabels = {'0':'〜3,000円','3000':'3,000〜6,000円','6000':'6,000〜10,000円','10000':'10,000円〜'};
 
             reviews.forEach(function(r) {
                 body += '<div style="background:#f9fafb;border-radius:16px;padding:14px;margin-bottom:8px;">';
+                var tags = [];
                 if(r.vibe_tag) {
                     var vc={'ガチ勢':'background:#fee2e2;color:#dc2626;','エンジョイ勢':'background:#dcfce7;color:#16a34a;','のびのび系':'background:#fef3c7;color:#b45309;','受験特化':'background:#dbeafe;color:#2563eb;'};
-                    body += '<span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800;margin-bottom:6px;'+(vc[r.vibe_tag]||'')+'">'+r.vibe_tag+'</span>';
+                    tags.push('<span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800;'+(vc[r.vibe_tag]||'')+'">'+r.vibe_tag+'</span>');
                 }
-                var rt=[];
-                if(r.satisfaction) rt.push('満足度 '+'★'.repeat(r.satisfaction)+'☆'.repeat(5-r.satisfaction));
-                if(r.skill_growth) rt.push('上達度 '+'★'.repeat(r.skill_growth)+'☆'.repeat(5-r.skill_growth));
-                if(r.cost_performance) rt.push('コスパ '+'★'.repeat(r.cost_performance)+'☆'.repeat(5-r.cost_performance));
-                if(r.teacher_passion) rt.push('先生の熱意 '+'★'.repeat(r.teacher_passion)+'☆'.repeat(5-r.teacher_passion));
-                if(r.parent_burden) rt.push('親の負担(★多=楽) '+'★'.repeat(r.parent_burden)+'☆'.repeat(5-r.parent_burden));
-                if(rt.length) body += '<div style="font-size:11px;color:#6b7280;font-weight:600;margin-bottom:6px;line-height:1.6;">'+rt.join('<br>')+'</div>';
-                if(r.body) body += '<p style="font-size:12px;color:#4b5563;line-height:1.6;">'+r.body+'</p>';
+                if(r.monthly_fee !== null && r.monthly_fee !== undefined) {
+                    var pl = priceLabels[String(r.monthly_fee)] || '';
+                    if(pl) tags.push('<span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800;background:#f3f4f6;color:#6b7280;">💰 '+pl+'</span>');
+                }
+                if(tags.length) body += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">'+tags.join('')+'</div>';
+                if(r.body) body += '<p style="font-size:13px;color:#4b5563;line-height:1.7;">「'+r.body+'」</p>';
                 body += '</div>';
             });
             body += '</div>';
 
-            setTimeout(function(){
-                var ctx = document.getElementById('radar-chart');
-                if(!ctx) return;
-                new Chart(ctx, {
-                    type: 'radar',
-                    data: { labels: axisLabels, datasets: [{ label: '平均スコア', data: avgs, backgroundColor: 'rgba(34,197,94,0.15)', borderColor: 'rgba(34,197,94,0.8)', borderWidth: 2, pointBackgroundColor: 'rgba(34,197,94,1)', pointRadius: 4 }] },
-                    options: { responsive: false, plugins: { legend: { display: false } }, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, font: { size: 10 }, backdropColor: 'transparent' }, pointLabels: { font: { size: 11, weight: '700' }, color: '#374151' }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.06)' } } } }
-                });
-            }, 50);
+            {{-- v2: レーダーチャート表示は非表示 --}}
         }
 
         if(tags.length) {
@@ -966,7 +1040,7 @@ function initApp() {
             body += '</div>';
         }
 
-        // Ambassador post section
+        /* v2: Ambassador post section
         if(spot.latest_ambassador_post) {
             var ap = spot.latest_ambassador_post;
             var apPhoto = ap.photo_path && ap.photo_path.startsWith('http') ? ap.photo_path : '/storage/' + ap.photo_path;
@@ -981,10 +1055,16 @@ function initApp() {
             body += '<a href="/ambassador/'+(spot.ambassador_user_id||'')+'" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:700;color:#d97706;text-decoration:none;">この先生の声をもっと聞く →</a>';
             body += '</div></div>';
         }
+        */
+
+        // 外部リンク
+        if(spot.link_url) {
+            body += '<a href="'+spot.link_url+'" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;background:#f0f9ff;color:#2563eb;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:12px;border:1px solid #bfdbfe;">🔗 外部サイトを見る</a>';
+        }
 
         body += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">';
         body += '<button onclick="toggleFavorite('+spot.id+', this)" id="fav-btn-'+spot.id+'" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:'+(favSet.has(spot.id)?'#fef3c7':'#f9fafb')+';color:'+(favSet.has(spot.id)?'#d97706':'#9ca3af')+';font-weight:700;font-size:13px;border:1px solid '+(favSet.has(spot.id)?'#fde68a':'#e5e7eb')+';cursor:pointer;">'+(favSet.has(spot.id)?'💛 お気に入り済':'🤍 お気に入り')+'</button>';
-        body += '<button onclick="openReviewForm('+spot.id+')" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:#fef3c7;color:#92400e;font-weight:700;font-size:13px;border:1px solid #fde68a;cursor:pointer;">📝 口コミ投稿</button>';
+        body += '<button onclick="openReviewForm('+spot.id+')" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:#fef3c7;color:#92400e;font-weight:700;font-size:13px;border:1px solid #fde68a;cursor:pointer;">📝 体験レポートを書く</button>';
         body += '</div>';
         body += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
         body += '<button onclick="shareSpot()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:#f0fdf4;color:#16a34a;font-weight:700;font-size:13px;border:none;cursor:pointer;">シェア</button>';
@@ -993,7 +1073,8 @@ function initApp() {
 
         detailBody.innerHTML = body;
 
-        // Enable pointer events
+        // Show & enable pointer events
+        overlay.style.visibility = 'visible';
         overlay.style.pointerEvents = 'auto';
         backdrop.style.pointerEvents = 'auto';
         card.style.pointerEvents = 'auto';
@@ -1019,11 +1100,12 @@ function initApp() {
 
         setTimeout(function(){
             overlay.style.pointerEvents = 'none';
+            overlay.style.visibility = 'hidden';
             backdrop.style.pointerEvents = 'none';
             card.style.pointerEvents = 'none';
         }, 450);
     };
-    window.shareSpot = function() { var t=heroTitle.textContent; if(navigator.share) navigator.share({title:t,text:t+' - KIDS COMPASS',url:location.href}); };
+    window.shareSpot = function() { var t=heroTitle.textContent; if(navigator.share) navigator.share({title:t,text:t+' - みっけ（MIKKE）',url:location.href}); };
 
     // ==========================================
     // Review form
@@ -1111,7 +1193,7 @@ if (typeof google !== 'undefined' && google.maps) {
         if (typeof google !== 'undefined' && google.maps && google.maps.marker) {
             clearInterval(_initInterval);
             initApp();
-            startAmbassadorPulse();
+            /* v2: startAmbassadorPulse(); */
         }
     }, 100);
 }

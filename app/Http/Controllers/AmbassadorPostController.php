@@ -12,15 +12,19 @@ use Illuminate\Http\Request;
 
 class AmbassadorPostController extends Controller
 {
-    // アンバサダー一覧（誰でも閲覧可能）
+    // アンバサダー通信タイムライン（誰でも閲覧可能）
     public function index()
     {
         $ambassadors = User::where('role', 'ambassador')
             ->withCount('ambassadorPosts')
-            ->with(['managedSpots', 'ambassadorPosts' => fn($q) => $q->latest()->limit(1)])
             ->get();
 
-        return view('ambassador.index', compact('ambassadors'));
+        $allPosts = AmbassadorPost::with(['user', 'spot'])
+            ->whereHas('user', fn($q) => $q->where('role', 'ambassador'))
+            ->latest()
+            ->get();
+
+        return view('ambassador.index', compact('ambassadors', 'allPosts'));
     }
 
     // アンバサダー個別ページ（投稿一覧 + Q&A + 体験申込）

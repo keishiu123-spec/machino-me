@@ -1,299 +1,400 @@
-# SETAGAYA KIDS COMPASS — プロダクト仕様書
+# まなとも — プロダクト仕様書
+> このファイルはClaude Code・Claude.ai・事業計画策定の共通インプット。
+> 機能追加・変更のたびに更新すること。
 
-> 最終更新: 2026-03-09
+---
+
+## 0. メタ情報
+| 項目 | 内容 |
+|------|------|
+| アプリ名 | まなとも（MANATOMO） |
+| 最終更新日 | 2026-03-15 |
+| 現在のバージョン | v0.4 |
+| 開発環境 | Laravel 12 / PHP 8.2 / SQLite |
+| 本番環境 | （未定） |
+| リポジトリ | （ローカル） |
+| 開発者 | keishi |
 
 ---
 
 ## 1. サービス概要
 
-### ミッション
-**習い事のブラックボックスを壊す。地域の暗黙知を街のインフラにする。**
+### ミッション（1行）
+習い事のブラックボックスを壊し、地域の暗黙知を街のインフラにする。
 
-公式HPに載らない「当番制度」「指導方針」「リアルな月謝」「振替ルール」——
-親が本当に知りたいのに、どこにも書いていない情報を地図上に集約する **ローカル子育てOS**。
+### タグライン
+子どもの「好き」が見つかる場所。
+親が集まり、習い事が広がる。
 
-### コアバリュー
-習い事の "ブラックボックス化" の解消。
-- 月謝の目安が分からない → `monthly_fee_range` で可視化
-- 当番制度が入ってから判明 → `has_parent_duty` で事前に分かる
-- 厳しさが合わない → `policy_type`（褒めて伸ばす / 厳しく鍛える）で比較
-- 急な予定変更に対応できるか → `transfer_available`（振替可否）で判断
+### 解決する課題
+- 課題1: 月謝の目安が公式HPに載っていない → `monthly_fee_range` で可視化
+- 課題2: 当番制度が入会後に判明する → `has_parent_duty` で事前に分かる
+- 課題3: 指導方針の合う合わないが分からない → `policy_type` + `vibe_tag` で比較
+- 課題4: 振替ルールが不明確 → `transfer_available` で判断
+- 課題5: 教室の選択肢が狭い → 最寄り小学校からの徒歩分数で範囲を可視化
 
 ### ターゲットユーザー
-世田谷区在住のタイパ重視な共働き子育て世帯（メイン: 30〜40代）。
+| 種別 | 説明 |
+|------|------|
+| 保護者（user） | 小学生の子どもを持つ親。習い事を探す・口コミを投稿する |
+| アンバサダー（ambassador） | 習い事教室・スポーツ少年団。スポットを掲載・通信を投稿・体験申込を受付する |
+| 管理者（admin） | 運営側 |
 
-### 技術スタック
-| レイヤー | 技術 |
-|---------|------|
-| Backend | Laravel 12 (PHP 8.2+) |
-| Frontend | Blade + Tailwind CSS (CDN) + Vite |
-| DB | SQLite（開発） / PostgreSQL + PostGIS（本番想定） |
-| 地図 | Leaflet.js + OpenStreetMap (Carto Voyager タイル) |
-| 住所検索 | Nominatim (OpenStreetMap) |
-| Cache/Queue/Session | database ドライバ |
-
----
-
-## 2. 主要機能
-
-### 2-1. インテリジェンス・ローカルマップ (`spots`)
-
-地図上にスポット（習い事教室・公園・施設）をピン表示し、親のリアルな声を集約する中核機能。
-
-#### マップUI
-- Leaflet.js による全画面マップ。写真ピン + スポット名ラベル
-- カテゴリフィルター（すべて / スポーツ少年団 / 個人教室 / 塾・学習 / 公園・遊び場 / 施設）
-- リアルタイム検索 → オートコンプリート → 選択でマップがflyTo + 詳細モーダル自動展開
-- タップでInstagram風フルスクリーンモーダル（ヒーロー画像 + 重要バッジ + 口コミ + タグ）
-
-#### 習い事カードバッジ（一目で分かる重要情報）
-マップ上のピンおよび詳細モーダルに以下のバッジを表示:
-- 💰 **月謝目安** — `monthly_fee_range`（例: `5,000〜8,000円`）
-- 📋 **当番なし** or **当番あり** — `has_parent_duty`
-- 🌱 **褒めて伸ばす** or 🔥 **厳しく鍛える** — `policy_type`
-- 🔄 **振替可** or **振替不可** — `transfer_available`
-- 🎒 **対象年齢** — `age_range`
-
-#### スポット登録 (`spots/create`)
-- Nominatim 住所検索 → 候補選択 → マーカー自動配置
-- ドラッグ / タップで位置微調整、逆ジオコーディングで住所自動表示
-- カテゴリ選択（スポーツ少年団 / 個人教室 / 塾・学習 / 公園・遊び場 / 施設 / その他）
-- 習い事メタデータ入力（月謝目安 / 当番有無 / 指導方針 / 振替可否）
-- 写真アップロード（プレビュー付き）
-
-### 2-2. 構造化レビュー (`reviews`)
-
-スポットに紐づく、**親の一次情報に特化**した定量レビュー。
-
-| 評価軸 | 型 | 説明 |
-|--------|------|------|
-| `satisfaction` | 1-5 | 総合満足度 |
-| `skill_growth` | 1-5 | 上達度・成長実感 |
-| `parent_burden` | 1-5 | 親の負担度（1:楽〜5:大変） |
-| `monthly_fee` | integer | 実際の月謝（円） |
-| `parent_duty` | boolean | 当番の有無 |
-| `strictness` | 1-5 | 指導の厳しさ |
-| `vibe_tag` | string | 雰囲気タグ（`ガチ勢` / `エンジョイ勢` / `のびのび系` / `受験特化`） |
-| `body` | text | 口コミ自由記述 |
-
-**設計意図**: `strictness` は「ガチ勢向き or エンジョイ勢向き」を判断する最重要指標。`vibe_tag` でさらに雰囲気を直感的に伝える。
-
-### 2-3. 「教えてタグ」掲示板 (`questions`)
-
-「公園のベンチでの立ち話」をコンセプトにした、温かみのあるQ&A機能。
-
-- ステータスフィルター（すべて / 受付中 / 解決済み）
-- 質問は吹き出し（Bubble）デザイン、回答はチャット風タイムライン
-- 各回答に「助かった！」ボタン → `thanks_count` 加算 + 質問カードのサマリーに連動表示
-- アイコン付きカテゴリ選択、匿名投稿トグル（デフォルトON）
-
-### 2-4. 協創型キュレーション — イベント投稿 (`events`)
-
-ネットに載らない地域行事を配信。事業者・公式アカウント向け。
-
-- イベント一覧（日付カード + 主催者バッジ + 対象年齢）
-- 詳細画面（日時・場所の情報カード、外部リンク）
-- `is_official` フラグを持つユーザーの投稿は「公式」バッジ付きで優先表示
-
-### 2-5. 横断検索 (`search`)
-
-- spots / questions / events をキーワードで横断検索
-- 結果はモデル別にグループ表示
+### 展開戦略
+1. 世田谷区でPMF検証
+2. 近隣区（目黒・渋谷・杉並）へ横展開
+3. 全国主要都市へ展開
 
 ---
 
-## 3. データ構造
+## 2. 実装済み機能一覧
+> ✅＝完成 / ⚠️＝部分実装 / ❌＝未着手
 
-### 3-1. spots テーブル
+| # | 機能名 | 状態 | 概要 |
+|---|--------|------|------|
+| 1 | マップ表示 | ✅ | Google Maps JavaScript API + AdvancedMarkerElement + MarkerClusterer |
+| 2 | スポット登録 | ✅ | Google Places検索 / 手動住所入力、重複検出＆マージ、写真アップロード、ステップインジケータ、リアルタイムバリデーション |
+| 3 | スポット詳細モーダル | ✅ | ボトムシートUI。ヒーロー画像 + バッジ + レーダーチャート + 口コミ + アンバサダー通信 |
+| 4 | カテゴリフィルター | ✅ | すべて / ⚽少年団 / 🎹個人教室 / 📚塾・学習 / 🏊施設 |
+| 5 | 小学校フィルター | ✅ | 学区の小学校選択 → 1km/2km圏内のスポットをハイライト + 徒歩分数表示 |
+| 6 | 教室比較機能 | ✅ | 2件選択 → レーダーチャート重ね合わせ + 詳細比較テーブル |
+| 7 | 構造化レビュー | ✅ | 5軸評価（満足度/上達度/コスパ/先生の熱意/親の負担） + vibe_tag + レーダーチャート |
+| 8 | 質問箱（掲示板） | ✅ | Slack風スレッドUI、カテゴリタブ、リアルタイム検索、非同期コメント投稿、「助かった」リアクション |
+| 9 | アンバサダー通信 | ✅ | 教室の先生からの写真＋メッセージ投稿、mood_tag、お下がり機能 |
+| 10 | アンバサダー公開Q&A | ✅ | 誰でも質問 → アンバサダーが回答 |
+| 11 | 体験申込フォーム | ✅ | 公開フォーム → アンバサダーダッシュボードで管理 |
+| 12 | アンバサダーダッシュボード | ✅ | 体験申込の承認/却下、投稿管理 |
+| 13 | LINEログイン | ✅ | Socialite + LINE Provider。既存アカウントリンク対応 |
+| 14 | マイページ | ✅ | プロフィール、統計、マイスクール設定、お気に入り管理、ご近所ボイス |
+| 15 | お気に入り | ✅ | スポットのお気に入り登録/解除、マイページに一覧表示 |
+| 16 | 横断検索 | ✅ | spots / questions / ambassador posts をキーワードで横断検索 |
+| 17 | 徒歩分数表示 | ✅ | マイスクール or 最寄り小学校からの徒歩分数を自動計算（80m/分） |
+| 18 | Push通知 | ❌ | FCM |
+| 19 | 決済代行 | ❌ | 月謝アプリ内決済 |
+
+---
+
+## 3. 既知のバグ・未完成箇所
+> 修正されるたびに消していく
+
+| # | 箇所 | 症状 | 優先度 |
+|---|------|------|--------|
+| 1 | peer-checked CSS | Tailwind CDNでpeer-checked:bg-coralが動的に生成されない可能性 | 中 |
+
+---
+
+## 4. データ構造
+
+### 4-1. テーブル一覧
+
+#### users
 | カラム | 型 | 説明 |
 |--------|------|------|
 | id | bigint PK | |
-| title | string | スポット名（省略不可・全文記載） |
-| lat | decimal(10,7) | 緯度 |
-| lng | decimal(10,7) | 経度 |
-| category | string, nullable | スポーツ少年団 / 個人教室 / 塾・学習 / 公園・遊び場 / 施設 / その他 |
-| note | text, nullable | 口コミ・自由記述 |
-| user_id | bigint | 投稿者 |
-| image_path | string, nullable | 画像パス |
-| link_url | string, nullable | 外部リンク |
-| age_range | string, nullable | 対象年齢帯（例: `"3-12"`） |
-| monthly_fee_range | string, nullable | 月謝目安（例: `"5,000〜8,000円"`） |
-| has_parent_duty | boolean, default:false | 当番・親の出番の有無 |
-| policy_type | string, nullable | 指導方針: `褒めて伸ばす` / `厳しく鍛える` / `バランス型` |
-| transfer_available | boolean, default:false | 振替可否 |
-| category_tags | json, nullable | タグ配列 |
+| name | string | 表示名 |
+| email | string, unique | メール（LINE未提供時は `line_{id}@line.local`） |
+| password | string | ハッシュ済み |
+| role | string, default:'user' | `user` / `ambassador` / `admin` |
+| avatar_url | string, nullable | 手動設定アバター |
+| avatar | string, nullable | LINEプロフィール画像 |
+| bio | string, nullable | 自己紹介 |
+| organization_name | string, nullable | 教室・団体名（ambassador用） |
+| my_school_id | bigint FK → schools, nullable | マイスクール |
+| line_id | string, nullable, unique | LINE OAuth ID |
 | timestamps | | |
 
-### 3-2. reviews テーブル
+#### spots
 | カラム | 型 | 説明 |
 |--------|------|------|
 | id | bigint PK | |
-| spot_id | bigint FK → spots | 対象スポット |
-| user_id | bigint FK → users | レビュー投稿者 |
-| satisfaction | tinyint, nullable | 総合満足度 1-5 |
-| skill_growth | tinyint, nullable | 上達度 1-5 |
-| parent_burden | tinyint, nullable | 親の負担度 1-5 |
-| monthly_fee | integer, nullable | 実際の月謝（円） |
-| parent_duty | boolean, default:false | 当番有無 |
-| strictness | tinyint, nullable | 指導の厳しさ 1-5 |
-| vibe_tag | string, nullable | ガチ勢 / エンジョイ勢 / のびのび系 / 受験特化 |
+| title | string | スポット名 |
+| lat / lng | decimal(10,7) | 緯度・経度 |
+| category | string | スポーツ少年団 / 個人教室 / 塾・学習 / 公園・遊び場 / 施設 / その他 |
+| note | text, nullable | 口コミ・自由記述 |
+| monthly_fee_range | string, nullable | 月謝目安（例: `5,000〜8,000円`） |
+| has_parent_duty | boolean, default:false | 当番・親の出番の有無 |
+| policy_type | string, nullable | `褒めて伸ばす` / `厳しく鍛える` / `バランス型` |
+| transfer_available | boolean, default:false | 振替可否 |
+| age_range | string, nullable | 対象年齢帯（例: `5-12`） |
+| image_path | string, nullable | 画像パス（public/spots/） |
+| link_url | string, nullable | 外部リンク |
+| google_place_id | string, nullable | Google Places認証用ID |
+| user_id | bigint | 投稿者 |
+| ambassador_user_id | bigint FK → users, nullable | 管理アンバサダー |
+| timestamps | | |
+
+#### reviews
+| カラム | 型 | 説明 |
+|--------|------|------|
+| id | bigint PK | |
+| spot_id | bigint FK → spots | |
+| user_id | bigint FK → users | |
+| satisfaction | tinyint 1-5 | 総合満足度 |
+| skill_growth | tinyint 1-5 | 上達度 |
+| cost_performance | tinyint 1-5 | コスパ |
+| teacher_passion | tinyint 1-5 | 先生の熱意 |
+| parent_burden | tinyint 1-5 | 親の負担（★多=楽） |
+| vibe_tag | string, nullable | `ガチ勢` / `エンジョイ勢` / `のびのび系` / `受験特化` |
 | body | text, nullable | 口コミ自由記述 |
 | timestamps | | |
 
-### 3-3. questions テーブル
+#### questions
 | カラム | 型 | 説明 |
 |--------|------|------|
 | id | bigint PK | |
 | title | string | 質問タイトル |
 | note | text, nullable | 質問詳細 |
-| category | string, nullable | カテゴリ |
-| image_path | string, nullable | 画像パス |
-| lat | decimal(10,7), nullable | 質問地点の緯度 |
-| lng | decimal(10,7), nullable | 質問地点の経度 |
-| user_id | bigint, nullable | 質問者 |
-| target_age | string, nullable | 対象年齢 |
-| status | string, default:`'open'` | `open` / `resolved` |
+| category | string, nullable | 月謝・費用 / 先生・指導 / 当番・親の負担 / 始め時・年齢 / 教室選び / 送迎・スケジュール |
+| image_path | string, nullable | |
+| user_id | bigint, nullable | |
+| target_age | string, nullable | |
+| status | string, default:'open' | `open` / `resolved` |
+| spot_id | bigint FK → spots, nullable | 関連スポット |
 | timestamps | | |
 
-### 3-4. comments テーブル
+#### comments
 | カラム | 型 | 説明 |
 |--------|------|------|
 | id | bigint PK | |
-| question_id | bigint FK → questions | 質問 |
-| user_id | bigint, nullable | 回答者 |
-| body | text | 回答本文 |
+| question_id | bigint FK → questions | |
+| user_id | bigint, nullable | |
+| body | text | |
 | thanks_count | integer, default:0 | 「助かった」数 |
 | timestamps | | |
 
-### 3-5. events テーブル
+#### ambassador_posts
 | カラム | 型 | 説明 |
 |--------|------|------|
 | id | bigint PK | |
-| title | string | イベント名 |
-| description | text, nullable | 説明 |
-| event_date | datetime | 開催日時 |
-| organizer_name | string, nullable | 主催者名 |
-| location_name | string, nullable | 場所名 |
-| lat | decimal(10,7), nullable | 緯度 |
-| lng | decimal(10,7), nullable | 経度 |
-| image_path | string, nullable | 画像パス |
-| link_url | string, nullable | 外部リンク |
-| user_id | bigint, nullable | 投稿者 |
-| category_tags | json, nullable | カテゴリタグ |
-| target_age | string, nullable | 対象年齢帯 |
+| user_id | bigint FK → users | アンバサダー |
+| spot_id | bigint FK → spots, nullable | 関連スポット |
+| message | text | メッセージ本文 |
+| photo_path | string | 写真パス |
+| mood_tag | string, nullable | 気分タグ |
+| has_osagari | boolean, default:false | お下がり有無 |
+| osagari_item | string, nullable | お下がり品名 |
+| osagari_size | string, nullable | サイズ |
 | timestamps | | |
 
-### 3-6. users テーブル
+#### ambassador_questions / ambassador_answers
+| テーブル | 概要 |
+|----------|------|
+| ambassador_questions | ユーザー → アンバサダーへの公開質問 |
+| ambassador_answers | アンバサダーからの回答 |
+
+#### trial_requests
 | カラム | 型 | 説明 |
 |--------|------|------|
 | id | bigint PK | |
-| name | string | 表示名 |
-| email | string, unique | |
-| password | string | |
-| nickname | string, nullable | 匿名表示用ニックネーム |
-| thanks_score | integer, default:0 | 感謝スコア累計 |
-| badge_level | string, default:`'newcomer'` | |
-| is_official | boolean, default:false | 公式アカウント |
-| area_code | string, nullable | 地域コード |
+| ambassador_user_id | bigint FK → users | 対象アンバサダー |
+| parent_name | string | 申込者名 |
+| child_age | string | 子どもの年齢 |
+| phone | string, nullable | 電話番号 |
+| message | text, nullable | メッセージ |
+| status | string, default:'pending' | `pending` / `approved` / `rejected` |
 | timestamps | | |
 
-### 3-7. thanks テーブル
+#### schools
 | カラム | 型 | 説明 |
 |--------|------|------|
 | id | bigint PK | |
+| name | string | 学校名 |
+| lat / lng | decimal(10,7) | 校門の位置 |
+| address | string, nullable | 住所 |
+| timestamps | | |
+
+#### favorites (pivot)
+| カラム | 型 | 説明 |
+|--------|------|------|
 | user_id | bigint FK → users | |
-| comment_id | bigint FK → comments | |
-| timestamps | | |
-| UNIQUE(user_id, comment_id) | | 重複投票防止 |
-
-### 3-8. safety_logs テーブル
-| カラム | 型 | 説明 |
-|--------|------|------|
-| id | bigint PK | |
-| lat | decimal(10,7) | 緯度 |
-| lng | decimal(10,7) | 経度 |
-| danger_type | string | 交通量 / 死角 / 不審者 / その他 |
-| time_zone | string, nullable | 朝 / 昼 / 夕方 / 夜 |
-| note | text, nullable | |
-| user_id | bigint FK → users | |
-| reaction_count | integer, default:0 | |
+| spot_id | bigint FK → spots | |
 | timestamps | | |
 
-### ER図
+### 4-2. ER図（Mermaid）
 ```mermaid
 erDiagram
     users ||--o{ spots : "投稿"
     users ||--o{ reviews : "レビュー"
-    users ||--o{ safety_logs : "報告"
     users ||--o{ questions : "質問"
     users ||--o{ comments : "回答"
-    users ||--o{ thanks : "感謝"
-    users ||--o{ events : "主催"
+    users ||--o{ ambassador_posts : "通信投稿"
+    users ||--o{ ambassador_questions : "受けた質問"
+    users ||--o{ trial_requests : "体験申込"
+    users }o--o{ spots : "お気に入り(favorites)"
+    users }o--o| schools : "マイスクール"
     spots ||--o{ reviews : "評価される"
+    spots ||--o{ ambassador_posts : "通信がある"
     questions ||--o{ comments : "回答される"
-    comments ||--o{ thanks : "感謝される"
+    ambassador_questions ||--o{ ambassador_answers : "回答される"
 ```
 
 ---
 
-## 4. ルーティング
+## 5. 画面一覧・遷移
 
-| Method | Path | Controller@Method | 説明 |
-|--------|------|-------------------|------|
-| GET | `/` | SpotController@index | ホーム（マップ） |
-| GET/POST/... | `/spots` (Resource) | SpotController | スポットCRUD |
-| GET/POST/... | `/questions` (Resource) | QuestionController | 質問CRUD |
-| POST | `/questions/{question}/comments` | SpotController@storeComment | コメント投稿 |
-| GET | `/events` | EventController@index | イベント一覧 |
-| GET | `/events/{id}` | EventController@show | イベント詳細 |
-| GET | `/search` | SearchController@index | 横断検索 |
-
----
-
-## 5. UI/UXルール
-
-### デザイン原則
-- **Instagram風カードデザイン**: 写真が浮き出る Shadow + Rounded (rounded-2xl〜3xl)
-- **場所名は省略禁止**: 全文記載。`substring` や `text-overflow: ellipsis` は使わない
-- **習い事バッジ**: カード上に「当番なし」「振替可」「月謝 5,000〜8,000円」などのバッジを一目で分かるように表示
-- **片手操作前提**: 大きめタッチターゲット、下部タブバー + 中央FAB
-
-### トンマナ
-- 白ベース + emeraldグリーン（`brand-500: #22c55e`）のアクセント
-- rounded-2xl / rounded-3xl の柔らかい角丸
-- 控えめシャドウ（`shadow-sm` / `shadow-[0_2px_16px_...]`）
+| # | 画面名 | URL | Bladeファイル | ログイン要否 | 概要 |
+|---|--------|-----|---------------|-------------|------|
+| 1 | ホーム（マップ） | `/` `/spots` | spots/index | 不要 | メインマップ + 検索 + フィルター + 詳細モーダル + 比較 |
+| 2 | スポット登録 | `/spots/create` | spots/create | 不要（user_id=1fallback） | Google Places / 手動検索、ステッププログレス |
+| 3 | 質問箱 | `/questions` | questions/index | 不要 | Slack風スレッドUI、カテゴリタブ |
+| 4 | 質問投稿 | `/questions/create` | questions/create | 不要 | カテゴリ選択 + テキスト入力 |
+| 5 | アンバサダー通信 | `/ambassador` | ambassador/index | 不要 | Instagram風タイムライン |
+| 6 | アンバサダー詳細 | `/ambassador/{id}` | ambassador/show | 不要 | プロフィール + 投稿一覧 + Q&A |
+| 7 | 通信投稿 | `/ambassador-post/create` | ambassador/create | 要（ambassador） | 写真 + メッセージ + mood_tag |
+| 8 | 体験申込 | `/ambassador/{id}/trial` | ambassador/trial | 不要 | 公開フォーム |
+| 9 | ダッシュボード | `/ambassador-dashboard` | ambassador/dashboard | 要（ambassador） | 申込管理 |
+| 10 | マイページ | `/mypage` | mypage/index | 不要（ゲスト:LINE誘導 / 認証:フル表示） | プロフィール + マイスクール + お気に入り |
+| 11 | 検索 | `/search` | search/index | 不要 | 横断検索 |
 
 ---
 
-## 6. マネタイズ戦略
+## 6. ルーティング一覧
 
-### Phase 1: PLG（Product-Led Growth）
-- 感謝アニメーション・バッジ獲得演出でエンゲージメント
-- SNSシェア動線（LINE・X）で口コミ集客
-
-### Phase 2: 収益化
-- **超特化型広告**（塾・教室向け）: スポット詳細やカテゴリ検索に地域教室の広告枠
-- **プレミアム掲載機能**: 公式アカウントによるリッチスポット掲載（月額サブスク）
-- **エリアマーケティングデータ**: 匿名化・集約化された地域データの提供（不動産・自治体向け）
-
-### Phase 3: 決済代行機能
-- 習い事の月謝をアプリ内で支払える決済代行（手数料3〜5%）
-
-### 展開戦略
-1. **世田谷区**でPMF達成
-2. 近隣区（目黒・渋谷・杉並）へ横展開
-3. 全国主要都市へ展開（`area_code` によるマルチテナント設計）
+| Method | Path | Controller@Method | 認証要否 |
+|--------|------|-------------------|---------|
+| GET | `/` | SpotController@index | 不要 |
+| Resource | `/spots` | SpotController | 不要（投稿はuser_id fallback） |
+| POST | `/spots/{spot}/reviews` | SpotController@storeReview | 不要 |
+| Resource | `/questions` | QuestionController | 不要 |
+| POST | `/questions/{q}/comments` | SpotController@storeComment | 不要 |
+| POST | `/api/comments/{c}/thanks` | Closure | 不要 |
+| GET | `/ambassador` | AmbassadorPostController@index | 不要 |
+| GET | `/ambassador/{id}` | AmbassadorPostController@show | 不要 |
+| POST | `/ambassador/{id}/questions` | AmbassadorPostController@storeQuestion | 不要 |
+| POST | `/ambassador-questions/{q}/answers` | AmbassadorPostController@storeAnswer | 不要 |
+| GET/POST | `/ambassador/{id}/trial` | AmbassadorPostController@trialForm/storeTrial | 不要 |
+| GET | `/ambassador-post/create` | AmbassadorPostController@create | 要（ambassador） |
+| POST | `/ambassador-post` | AmbassadorPostController@store | 要（ambassador） |
+| GET | `/ambassador-dashboard` | AmbassadorPostController@dashboard | 要（ambassador） |
+| PATCH | `/ambassador-trial/{t}/status` | AmbassadorPostController@updateTrialStatus | 要（ambassador） |
+| GET | `/api/ambassador-pulse` | Closure（JSON） | 不要 |
+| GET | `/mypage` | MyPageController@index | 不要 |
+| POST | `/mypage/school` | MyPageController@updateSchool | 不要 |
+| POST | `/spots/{spot}/favorite` | MyPageController@toggleFavorite | 不要 |
+| GET | `/search` | SearchController@index | 不要 |
+| GET | `/auth/line` | LineLoginController@redirect | 不要 |
+| GET | `/auth/line/callback` | LineLoginController@callback | 不要 |
+| POST | `/logout` | Closure | 不要 |
+| GET | `/dev/login-as/{userId}` | Closure（デモ用） | 不要 |
 
 ---
 
-## 7. 今後の拡張予定
+## 7. 外部サービス・連携
 
-| 優先度 | 機能 | 概要 |
-|--------|------|------|
-| 🔴 高 | ユーザー認証 | Laravel Breeze or LINE Login |
-| 🔴 高 | Thanks API | 「助かった」のDB永続化 + スコア加算 |
-| 🟡 中 | SafetyLog UI | セーフティログ投稿・マップ表示 |
-| 🟡 中 | イベント投稿フォーム | 事業者向けイベント作成画面 |
-| 🟢 低 | Push通知 | FCM による回答依頼通知 |
-| 🟢 低 | 決済代行 | 月謝のアプリ内決済 |
-| 🟢 低 | マルチエリア展開 | area_code による他区対応 |
+| サービス | 用途 | 状態 |
+|----------|------|------|
+| Google Maps JavaScript API | 地図表示（AdvancedMarkerElement, MarkerClusterer） | 実装済み |
+| Google Places API | スポット検索・google_place_id取得 | 実装済み |
+| Google Geocoding API | 住所検索・逆ジオコーディング | 実装済み |
+| LINE Login (Socialite) | ユーザー認証・アカウントリンク | 実装済み |
+| Chart.js | レーダーチャート（レビュー・比較） | 実装済み |
+| Tailwind CSS (CDN) | UIスタイリング | 実装済み |
+| Noto Sans JP / Noto Serif JP (Google Fonts) | タイポグラフィ | 実装済み |
+| FCM（Firebase） | Push通知 | 未着手 |
+| Stripe / その他決済 | 月謝決済 | 未着手 |
+
+---
+
+## 8. デザイントークン（確定版）
+
+| トークン | 値 | 用途 |
+|----------|----|------|
+| メインカラー | #26304F（ウォームインディゴ） | ヘッダー・主要テキスト |
+| 背景色 | #FAF7F2（ウォームクリーム） | ページ背景 |
+| アクセント | #E8704A（コーラル） | CTA・空き状況バッジ |
+| サブカラー1 | #5D8F7C（セージ） | スポーツ系カテゴリ |
+| サブカラー2 | #C9973A（ゴールド） | 特集・おすすめ |
+| ボーダー | #E4DDD4 | カード・区切り線 |
+| フォント（ロゴ・見出し） | Noto Serif JP W500 | |
+| フォント（本文・UI） | Noto Sans JP W400/500 | |
+| 角丸（カード） | 12px | |
+| 角丸（ボタン） | 20px（pill） | |
+| 角丸（入力欄） | 10px | |
+| ボーダー線 | 0.5px solid #E4DDD4 | |
+
+### ジャンルカラー対応表
+| カテゴリ | アイコン背景 | CSSクラス案 |
+|----------|-------------|------------|
+| スポーツ全般 | #FBF0EB (coral-light) | .genre-sports |
+| 水泳 | #EBF4F0 (sage-light) | .genre-swim |
+| アート・絵画 | #F5EDFC (薄パープル) | .genre-art |
+| 音楽 | #EBF0F8 (薄インディゴ) | .genre-music |
+| 学習塾 | #FBF3E3 (gold-light) | .genre-study |
+| その他 | #F0EAE0 (cream-mid) | .genre-other |
+
+### 禁止事項
+- box-shadow でカードに影をつけない
+- 背景を純白 #FFFFFF・グレー #F5F5F5 にしない
+- Inter・Roboto等の欧文フォントをメインにしない
+- ヘッダーを青系 #2196F3 等にしない → インディゴ #26304F 統一
+- アクセントに黄・緑・赤を使わない → コーラル #E8704A 統一
+- ボーダーを #CCCCCC 等の汎用グレーにしない → #E4DDD4
+- レインボー・多色使いのUI
+- ロゴにサンセリフを使わない → 明朝体 Noto Serif JP
+- 英語表記「Kids Compass」を残さない → 「まなとも」に統一済み
+
+---
+
+## 9. 技術スタック
+
+| レイヤー | 技術 |
+|----------|------|
+| Backend | Laravel 12 / PHP 8.2+ |
+| Frontend | Blade + Tailwind CSS (CDN) + Google Fonts |
+| DB（開発） | SQLite |
+| DB（本番想定） | PostgreSQL + PostGIS |
+| 地図 | Google Maps JavaScript API (AdvancedMarkerElement) |
+| 認証 | LINE Login (laravel/socialite + socialiteproviders/line) |
+| Cache/Queue/Session | database ドライバ |
+| チャート | Chart.js |
+
+---
+
+## 10. マネタイズ計画
+
+| フェーズ | 内容 | 時期 |
+|----------|------|------|
+| Phase 1 | PLG（習い事スコア・バッジ・SNSシェアで口コミ集客） | 現在 |
+| Phase 2 | 教室向け広告枠 / プレミアム掲載（月額サブスク） | PMF後 |
+| Phase 3 | 月謝決済代行（手数料3〜5%） | 全国展開後 |
+| Phase 4 | 匿名化地域データ販売（不動産・自治体向け） | スケール後 |
+
+---
+
+## 11. 今後のロードマップ
+
+| 優先度 | 機能 | 概要 | 担当 |
+|--------|------|------|------|
+| ~~🔴 高~~ | ~~認証必須化~~ | ~~user_idハードコード解消~~ → **完了** (2026-03-15) | |
+| 🔴 高 | お下がりマッチング強化 | 通知・ステータス管理の充実 | |
+| 🟡 中 | セーフティログ | 通学路の危険箇所マッピング | |
+| 🟡 中 | Push通知 | FCMによる回答通知・新着通信通知 | |
+| 🟡 中 | マイスクール未設定時のオンボーディング | 初回アクセス時に学校選択を促す | |
+| 🟢 低 | 決済代行 | Stripe連携 | |
+| 🟢 低 | マルチエリア展開 | area_code による他区対応 | |
+| 🟢 低 | ダークモード | 将来対応 | |
+
+---
+
+## 12. 競合・差別化
+
+| サービス | 概要 | まなともとの違い |
+|----------|------|----------------|
+| スタディサプリ for School | 学習系 | 習い事全般・地域コミュニティがない |
+| Conobie / 子育て情報サイト | 記事メディア | UGCの口コミ・地図機能がない |
+| きっずとっぷ遊び体験 | 体験予約 | 継続的な習い事・親同士の交流がない |
+| 地域のFacebookグループ | 非公式口コミ | 検索・比較・構造化データがない |
+
+---
+
+## 更新履歴
+| 日付 | 更新内容 |
+|------|---------|
+| 2026-03-15 | 認証修正: user_idハードコード解消、authミドルウェア適用、未ログイン導線LINE統一、マイページ完成（自分の投稿・ambassadorセクション追加） |
+| 2026-03-15 | テンプレートに沿って全面改訂。実装済み機能・データ構造・ルーティングを現状に合わせて更新。ブランドトークン確定版を反映 |
+| 2026-03-15 | ブランドを「まなとも」に変更、デザイントークン確定 |
+| 2026-03-14 | LINE連携実装、徒歩分数ロジック追加 |
+| 2026-03-12 | マイページ・お気に入り・マイスクール・アンバサダーQ&A・体験申込実装 |
+| 2026-03-10 | アンバサダー通信機能実装、ロール制導入 |
+| 2026-03-09 | 習い事メタデータ（月謝・当番・方針・振替）追加、Google Places連携 |
+| 2026-03-07 | 初版作成（Kids Compass時代） |
