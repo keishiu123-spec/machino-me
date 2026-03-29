@@ -3,7 +3,7 @@
 @section('content')
 <div class="min-h-screen pb-20" style="background: var(--color-cream);">
     {{-- Header --}}
-    <div class="flex items-center justify-between px-5 py-3 sticky top-[41px] backdrop-blur-xl z-[2000]" style="background: rgba(250,247,242,0.95); border-bottom: 0.5px solid var(--color-border);">
+    <div class="flex items-center justify-between px-5 py-3 sticky top-[65px] backdrop-blur-xl z-[2000]" style="background: rgba(250,247,242,0.95); border-bottom: 0.5px solid var(--color-border);">
         <a href="{{ route('spots.index') }}" class="hover:opacity-70 transition-colors" style="color: var(--color-ink-soft);">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </a>
@@ -111,24 +111,26 @@
                 <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] text-white mr-1" style="background: var(--color-coral);">3</span>
                 カテゴリ
             </label>
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-3 gap-3">
                 @php
                     $cats = [
-                        ['val'=>'スポーツ少年団','emoji'=>'⚽','label'=>'スポーツ少年団'],
-                        ['val'=>'個人教室','emoji'=>'🎹','label'=>'個人教室'],
-                        ['val'=>'塾・学習','emoji'=>'📚','label'=>'塾・学習'],
-                        ['val'=>'水泳・体操','emoji'=>'🏊','label'=>'水泳・体操'],
-                        ['val'=>'武道','emoji'=>'🥋','label'=>'武道'],
-                        ['val'=>'英語・語学','emoji'=>'🌍','label'=>'英語・語学'],
-                        ['val'=>'その他','emoji'=>'📍','label'=>'その他'],
+                        ['val'=>'スポーツ少年団','emoji'=>'⚽','label'=>'スポーツ少年団','bg'=>'#FFF0E0','fg'=>'#E8704A'],
+                        ['val'=>'個人教室','emoji'=>'🎵','label'=>'個人教室（音楽）','bg'=>'#EEF0FF','fg'=>'#5B5BD6'],
+                        ['val'=>'塾・学習','emoji'=>'📖','label'=>'塾・学習','bg'=>'#FFF8E0','fg'=>'#C9973A'],
+                        ['val'=>'水泳・体操','emoji'=>'🏊','label'=>'水泳・体操','bg'=>'#E0F4FF','fg'=>'#3A9CC9'],
+                        ['val'=>'バレエ・ダンス','emoji'=>'🩰','label'=>'バレエ・ダンス','bg'=>'#FFE0F4','fg'=>'#C93A8A'],
+                        ['val'=>'武道','emoji'=>'🥋','label'=>'武道・空手','bg'=>'#F0F0F0','fg'=>'#444444'],
+                        ['val'=>'英語・語学','emoji'=>'🌍','label'=>'英語・語学','bg'=>'#E0FFE8','fg'=>'#3AC95B'],
+                        ['val'=>'公園・遊び場','emoji'=>'🌳','label'=>'公園・遊び場','bg'=>'#E8FFE0','fg'=>'#5BC93A'],
+                        ['val'=>'その他','emoji'=>'✨','label'=>'その他','bg'=>'#F5F0FF','fg'=>'#7B5BD6'],
                     ];
                 @endphp
                 @foreach($cats as $i => $cat)
                 <label>
                     <input type="radio" name="category" value="{{ $cat['val'] }}" class="hidden peer" {{ $i===0?'checked':'' }}>
-                    <div class="peer-checked:border-coral peer-checked:bg-coral-light peer-checked:text-coral bg-white border rounded-xl py-2.5 text-center cursor-pointer transition-all active:scale-95" style="border-color: var(--color-border);">
-                        <span class="text-lg block">{{ $cat['emoji'] }}</span>
-                        <span class="text-[10px] font-bold block mt-0.5" style="color: inherit;">{{ $cat['label'] }}</span>
+                    <div class="peer-checked:ring-2 peer-checked:ring-[#E8704A] aspect-square flex flex-col items-center justify-center rounded-2xl cursor-pointer transition-all active:scale-95" style="background: {{ $cat['bg'] }};">
+                        <span class="text-2xl block mb-1">{{ $cat['emoji'] }}</span>
+                        <span class="text-[10px] font-bold block" style="color: {{ $cat['fg'] }};">{{ $cat['label'] }}</span>
                     </div>
                 </label>
                 @endforeach

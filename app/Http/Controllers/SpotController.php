@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Spot;
 use App\Models\Comment;
 use App\Models\Review;
 use App\Models\School;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Spot;
+use Illuminate\Http\Request;
 
 class SpotController extends Controller
 {
@@ -19,7 +18,7 @@ class SpotController extends Controller
             $query->where('category', $request->category);
         }
         $spots = $query->with(['reviews', 'latestAmbassadorPost'])
-            ->withCount(['ambassadorPosts as osagari_count' => fn($q) => $q->where('has_osagari', true)])
+            ->withCount(['ambassadorPosts as osagari_count' => fn ($q) => $q->where('has_osagari', true)])
             ->latest()->get();
 
         // ユーザーのマイ・スクール情報を取得
@@ -43,6 +42,7 @@ class SpotController extends Controller
     public function create()
     {
         $existingSpots = Spot::select('id', 'title', 'lat', 'lng', 'google_place_id')->get();
+
         return view('spots.create', compact('existingSpots'));
     }
 
@@ -86,10 +86,10 @@ class SpotController extends Controller
         }
 
         // 2. place_id がなければ、同名 + 近距離（200m以内）で検索
-        if (!$existing) {
+        if (! $existing) {
             $existing = Spot::where('title', $request->title)
                 ->whereRaw('ABS(lat - ?) < 0.002 AND ABS(lng - ?) < 0.002', [
-                    $request->lat, $request->lng
+                    $request->lat, $request->lng,
                 ])
                 ->first();
         }
@@ -99,7 +99,7 @@ class SpotController extends Controller
             $updates = [];
 
             // 画像がなければ更新
-            if ($request->hasFile('image') && !$existing->image_path) {
+            if ($request->hasFile('image') && ! $existing->image_path) {
                 $updates['image_path'] = $request->file('image')->store('spots', 'public');
             }
 
@@ -109,7 +109,7 @@ class SpotController extends Controller
                     $updates[$field] = $request->$field;
                 }
             }
-            if ($request->filled('google_place_id') && !$existing->google_place_id) {
+            if ($request->filled('google_place_id') && ! $existing->google_place_id) {
                 $updates['google_place_id'] = $request->google_place_id;
             }
 
@@ -128,7 +128,7 @@ class SpotController extends Controller
             }
 
             return redirect()->route('spots.index', ['focus' => $existing->id])
-                ->with('success', '既存のスポット「' . $existing->title . '」に情報を追加しました！');
+                ->with('success', '既存のスポット「'.$existing->title.'」に情報を追加しました！');
         }
 
         // --- 新規登録 ---
@@ -147,34 +147,34 @@ class SpotController extends Controller
             ->with('success', 'スポットを登録しました！');
     }
 
-    // レビュー投稿 — v1: 3ステップ体験レポート（雰囲気・価格帯・一言）
+    // レビュー投稿 — MVP: 2項目タップ式口コミ
     public function storeReview(Request $request, Spot $spot)
     {
         $request->validate([
             'vibe_tag' => 'required|string',
-            'monthly_fee' => 'required|integer',
+            'parent_involvement' => 'required|string',
             'body' => 'nullable|string|max:100',
         ]);
 
         Review::create([
             'spot_id' => $spot->id,
-            'user_id' => auth()->id(),
+            'user_id' => auth()->id() ?? null,
             'vibe_tag' => $request->vibe_tag,
-            'monthly_fee' => $request->monthly_fee,
+            'parent_involvement' => $request->parent_involvement,
             'body' => $request->body,
         ]);
 
-        return redirect()->route('spots.index')->with('success', '体験レポートを投稿しました！');
+        return redirect()->route('spots.index')->with('success', '口コミを投稿しました！');
     }
 
     // タイムライン一覧
     public function questionList()
     {
         $questions = Spot::with('comments')
-                         ->where('category', 'like', '%質問%')
-                         ->orWhere('category', 'like', '%教えて%')
-                         ->latest()
-                         ->get();
+            ->where('category', 'like', '%質問%')
+            ->orWhere('category', 'like', '%教えて%')
+            ->latest()
+            ->get();
 
         return view('questions.index', compact('questions'));
     }
@@ -187,8 +187,8 @@ class SpotController extends Controller
 
         $comment = Comment::create([
             'question_id' => $questionId,
-            'body'        => $request->body,
-            'user_id'     => auth()->id(),
+            'body' => $request->body,
+            'user_id' => auth()->id(),
         ]);
 
         if ($request->wantsJson() || $request->ajax()) {

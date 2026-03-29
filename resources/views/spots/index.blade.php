@@ -6,7 +6,8 @@
     {{-- Map（画面全体に固定表示、ヘッダーの下） --}}
     <div id="map" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>
 
-    {{-- Search Bar --}}
+    {{-- GGA demo: hidden --}}
+    {{-- Search Bar
     <div class="absolute top-3 left-0 right-0 z-[1100] px-4">
         <div class="backdrop-blur-xl overflow-visible" style="background: rgba(255,255,255,0.92); border-radius: var(--radius-card); border: 0.5px solid var(--color-border);">
             <div class="px-4 py-3 flex items-center gap-3">
@@ -20,9 +21,25 @@
             <div id="search-dropdown" class="hidden border-t border-gray-100/50"></div>
         </div>
     </div>
+    --}}
 
-    {{-- School Filter --}}
-    <div class="absolute top-[60px] left-0 right-0 z-[1002] px-4">
+    {{-- Category Filter (floating inside map) --}}
+    <div class="absolute top-3 left-0 right-0 z-[1100] px-4">
+        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+            <button onclick="filterCategory('すべて')" class="cat-btn active flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="すべて">すべて</button>
+            <button onclick="filterCategory('スポーツ少年団')" class="cat-btn flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="スポーツ少年団">⚽ 少年団</button>
+            <button onclick="filterCategory('個人教室')" class="cat-btn flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="個人教室">🎵 個人教室</button>
+            <button onclick="filterCategory('塾・学習')" class="cat-btn flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="塾・学習">📖 塾・学習</button>
+            <button onclick="filterCategory('水泳・体操')" class="cat-btn flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="水泳・体操">🏊 水泳</button>
+            <button onclick="filterCategory('武道')" class="cat-btn flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="武道">🥋 武道</button>
+            <button onclick="filterCategory('英語・語学')" class="cat-btn flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="英語・語学">🌍 英語</button>
+            <button onclick="filterCategory('公園')" class="cat-btn flex-shrink-0 transition-all" style="border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;" data-cat="公園">🌳 公園</button>
+        </div>
+    </div>
+
+    {{-- GGA demo: hidden --}}
+    {{-- School Filter
+    <div class="absolute top-[50px] left-0 right-0 z-[1001] px-4">
         <div class="backdrop-blur-xl px-3 py-2 flex items-center gap-2" style="background: rgba(255,255,255,0.92); border-radius: var(--radius-input); border: 0.5px solid var(--color-border);">
             <span class="text-[10px] font-bold text-gray-500 flex-shrink-0">🏫</span>
             <select id="school-select" onchange="onSchoolChange()" class="text-xs font-bold text-gray-700 bg-transparent outline-none flex-1 min-w-0">
@@ -37,19 +54,7 @@
             </button>
         </div>
     </div>
-
-    {{-- Category Filter --}}
-    <div class="absolute top-[104px] left-0 right-0 z-[1001] px-4">
-        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-            <button onclick="filterCategory('すべて')" class="cat-btn active flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="すべて">すべて</button>
-            <button onclick="filterCategory('スポーツ少年団')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="スポーツ少年団">⚽ 少年団</button>
-            <button onclick="filterCategory('個人教室')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="個人教室">🎹 個人教室</button>
-            <button onclick="filterCategory('塾・学習')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="塾・学習">📚 塾・学習</button>
-            <button onclick="filterCategory('水泳・体操')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="水泳・体操">🏊 水泳・体操</button>
-            <button onclick="filterCategory('武道')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="武道">🥋 武道</button>
-            <button onclick="filterCategory('英語・語学')" class="cat-btn flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all" data-cat="英語・語学">🌍 英語</button>
-        </div>
-    </div>
+    --}}
 
     {{-- v2: Toggle List View
     <button id="toggle-list-btn" onclick="toggleListView()"
@@ -108,15 +113,14 @@
                 <div id="detail-drag-handle" class="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing flex-shrink-0">
                     <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
                 </div>
-                <div id="detail-hero" class="relative w-full overflow-hidden flex-shrink-0" style="min-height:200px;">
+                <div id="detail-hero" class="relative w-full overflow-hidden flex-shrink-0" style="min-height:180px;">
                     <div id="hero-bg" class="absolute inset-0"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                    <button id="detail-close-btn" class="absolute top-3 right-3 w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-all active:scale-90 z-10">
+                    <button id="detail-close-btn" class="absolute top-3 right-3 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all active:scale-90 z-10" style="color: var(--color-ink);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="14" y1="5" x2="5" y2="14"/><line x1="5" y1="5" x2="14" y2="14"/></svg>
                     </button>
                     <div class="absolute bottom-0 left-0 right-0 p-5 z-10">
                         <div id="hero-badges" class="flex flex-wrap gap-1.5 mb-2"></div>
-                        <h2 id="hero-title" class="text-2xl font-black text-white leading-tight drop-shadow-lg"></h2>
+                        <h2 id="hero-title" class="text-2xl font-black leading-tight"></h2>
                     </div>
                 </div>
                 <div id="detail-body" class="flex-1 overflow-y-auto overscroll-contain px-5 pt-5" style="padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));"></div>
@@ -124,63 +128,60 @@
         </div>
     </div>
 
-    {{-- Review Modal — v1: 30秒・3ステップ体験レポート --}}
+    {{-- Review Modal — MVP: 2項目タップ式口コミ --}}
     <div id="review-overlay" class="fixed inset-0 z-[6000] hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeReviewForm()"></div>
         <div class="absolute inset-x-0 bottom-0 max-w-md mx-auto">
             <div class="p-6" style="background: var(--color-white); border-radius: 28px 28px 0 0; border-top: 0.5px solid var(--color-border);">
-                <div class="flex items-center justify-between mb-5">
-                    <h3 class="text-base font-serif" style="color: var(--color-ink);">体験レポート</h3>
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-serif" style="color: var(--color-ink);">口コミを投稿</h3>
                     <button onclick="closeReviewForm()" class="text-gray-400 hover:text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="14" y1="5" x2="5" y2="14"/><line x1="5" y1="5" x2="14" y2="14"/></svg></button>
                 </div>
-                <form id="review-form" method="POST" class="space-y-5">
+                <form id="review-form" method="POST" class="space-y-6">
                     @csrf
                     <input type="hidden" name="spot_id" id="review-spot-id">
 
-                    {{-- Step 1: 雰囲気タグ --}}
+                    {{-- 項目1: 雰囲気 --}}
                     <div>
-                        <label class="text-xs font-bold mb-2 block" style="color: var(--color-ink-mid);">Step 1｜雰囲気は？ <span class="text-red-500">*必須</span></label>
-                        <div class="grid grid-cols-2 gap-2">
-                            @foreach(['のびのび系','ガチ勢','エンジョイ勢','受験特化'] as $vibe)
+                        <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">雰囲気は？ <span class="text-red-500 text-xs">*必須</span></label>
+                        <div class="flex flex-wrap gap-3">
+                            @foreach(['ガチ勢向き','バランス','のびのび'] as $vibe)
                             <label>
-                                <input type="radio" name="vibe_tag" value="{{ $vibe }}" class="hidden peer" {{ $loop->first?'checked':'' }}>
-                                <div class="peer-checked:border-coral peer-checked:bg-coral-light peer-checked:text-coral bg-gray-50 border rounded-xl py-3 text-center text-sm font-bold cursor-pointer transition-all active:scale-95" style="border-color: var(--color-border); color: var(--color-ink-mid);">{{ $vibe }}</div>
+                                <input type="radio" name="vibe_tag" value="{{ $vibe }}" class="hidden peer">
+                                <div class="peer-checked:bg-[#E8704A] peer-checked:text-white peer-checked:border-[#E8704A] bg-white border-2 border-gray-200 text-gray-500 rounded-[20px] py-3 px-5 text-sm font-bold cursor-pointer transition-all active:scale-95">{{ $vibe }}</div>
                             </label>
                             @endforeach
                         </div>
                     </div>
 
-                    {{-- Step 2: 価格帯 --}}
+                    {{-- 項目2: 親の関わり度 --}}
                     <div>
-                        <label class="text-xs font-bold mb-2 block" style="color: var(--color-ink-mid);">Step 2｜価格帯は？ <span class="text-red-500">*必須</span></label>
-                        <div class="grid grid-cols-2 gap-2">
-                            @php $prices = [['val'=>'0','label'=>'〜3,000円'],['val'=>'3000','label'=>'3,000〜6,000円'],['val'=>'6000','label'=>'6,000〜10,000円'],['val'=>'10000','label'=>'10,000円〜']]; @endphp
-                            @foreach($prices as $price)
+                        <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">親の関わり度は？ <span class="text-red-500 text-xs">*必須</span></label>
+                        <div class="flex flex-wrap gap-3">
+                            @foreach(['ほぼなし','月数回','毎週ある'] as $pi)
                             <label>
-                                <input type="radio" name="monthly_fee" value="{{ $price['val'] }}" class="hidden peer" {{ $loop->first?'checked':'' }}>
-                                <div class="peer-checked:border-coral peer-checked:bg-coral-light peer-checked:text-coral bg-gray-50 border rounded-xl py-3 text-center text-sm font-bold cursor-pointer transition-all active:scale-95" style="border-color: var(--color-border); color: var(--color-ink-mid);">{{ $price['label'] }}</div>
+                                <input type="radio" name="parent_involvement" value="{{ $pi }}" class="hidden peer">
+                                <div class="peer-checked:bg-[#E8704A] peer-checked:text-white peer-checked:border-[#E8704A] bg-white border-2 border-gray-200 text-gray-500 rounded-[20px] py-3 px-5 text-sm font-bold cursor-pointer transition-all active:scale-95">{{ $pi }}</div>
                             </label>
                             @endforeach
                         </div>
                     </div>
 
-                    {{-- Step 3: 一言コメント --}}
+                    {{-- 項目3: 一言コメント --}}
                     <div>
-                        <label class="text-xs font-bold mb-2 block" style="color: var(--color-ink-mid);">Step 3｜一言コメント <span class="text-gray-400">（任意・100文字まで）</span></label>
+                        <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">一言コメント <span class="text-gray-400 text-xs font-normal">（任意・100文字まで）</span></label>
                         <textarea name="body" rows="2" maxlength="100" placeholder="先生がとても優しくて子どもが毎回楽しそうに通っています"
-                            class="w-full bg-gray-50 rounded-xl px-4 py-3 text-sm outline-none border transition-all resize-none" style="border-color: var(--color-border); color: var(--color-ink);"></textarea>
+                            class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm outline-none border-2 border-gray-200 transition-all resize-none focus:border-[#E8704A]" style="color: var(--color-ink);"></textarea>
                     </div>
 
                     <button type="submit"
-                        class="w-full text-white font-medium py-3.5 active:scale-[0.98] transition-all text-sm" style="background: var(--color-coral); border-radius: var(--radius-pill); box-shadow: none;">
-                        体験レポートを送信
+                        class="w-full text-white font-bold py-4 active:scale-[0.98] transition-all text-base" style="background: #E8704A; border-radius: 20px;">
+                        口コミを送信
                     </button>
                 </form>
             </div>
         </div>
     </div>
-
-    {{-- v2: 旧5軸レビューフォーム（satisfaction, skill_growth, cost_performance, teacher_passion, parent_burden）は上記で置換済み --}}
 </div>
 
 <style>
@@ -190,121 +191,25 @@
     .spot-pin {
         display: flex; flex-direction: column; align-items: center;
         cursor: pointer;
-        filter: drop-shadow(0 3px 8px rgba(0,0,0,0.18));
-        transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s, opacity 0.4s;
+        transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
     }
     .spot-pin:hover, .spot-pin.active {
         transform: scale(1.15) translateY(-4px);
-        filter: drop-shadow(0 8px 20px rgba(0,0,0,0.28));
         z-index: 9999 !important;
     }
     .spot-pin.faded { opacity: 0.15; pointer-events: none; }
-    .spot-pin-photo {
-        width: 52px; height: 52px; border-radius: 50%;
-        overflow: hidden; border: 3px solid white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        position: relative;
+    .spot-pin-circle {
+        width: 48px; height: 48px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px; border: 2px solid white;
     }
-    .spot-pin-photo img { width: 100%; height: 100%; object-fit: cover; }
-    .spot-pin-photo-placeholder {
-        width: 100%; height: 100%;
-        display: flex; align-items: center; justify-content: center; font-size: 22px;
-    }
-    .spot-pin-tail { width: 10px; height: 10px; transform: rotate(45deg); margin-top: -6px; border-radius: 0 0 2px 0; }
     .spot-pin-label {
-        margin-top: 1px; padding: 2px 7px; border-radius: 6px;
+        margin-top: 2px; padding: 2px 7px; border-radius: 6px;
         font-size: 9px; font-weight: 800; color: #1e293b;
-        background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        background: white;
         text-align: center; white-space: nowrap;
         max-width: 90px; overflow: hidden; text-overflow: ellipsis;
     }
-    /* Mini icon dots — always visible, compact */
-    .spot-pin-dots {
-        display: flex; gap: 3px; margin-top: 2px; align-items: center; justify-content: center;
-    }
-    .spot-pin-dot {
-        width: 14px; height: 14px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 8px; line-height: 1;
-        background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    /* Expanded badges — only on hover/active */
-    .spot-pin-badges {
-        display: none; gap: 2px; margin-top: 3px; flex-wrap: wrap; justify-content: center;
-        max-width: 140px;
-    }
-    .spot-pin:hover .spot-pin-badges,
-    .spot-pin.active .spot-pin-badges { display: flex; }
-    .spot-pin:hover .spot-pin-dots,
-    .spot-pin.active .spot-pin-dots { display: none; }
-    .spot-pin-badge { padding: 1px 5px; border-radius: 6px; font-size: 8px; font-weight: 800; background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.08); white-space: nowrap; }
-    .spot-pin-amb-badge { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; border: 1px solid #f59e0b; }
-    .spot-pin-amb-glow {
-        position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
-        width: 56px; height: 56px; border-radius: 50%;
-        background: radial-gradient(circle, rgba(245,158,11,0.35) 0%, transparent 70%);
-        animation: ambPulse 2s ease-in-out infinite;
-        pointer-events: none;
-    }
-    @keyframes ambPulse {
-        0%,100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
-        50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
-    }
-
-    /* ===== New Post Burst Effect ===== */
-    .spot-pin-burst-ring {
-        position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-        width: 20px; height: 20px; border-radius: 50%;
-        border: 3px solid #f59e0b;
-        animation: burstRing 1.5s ease-out forwards;
-        pointer-events: none;
-    }
-    @keyframes burstRing {
-        0%   { width: 20px; height: 20px; opacity: 1; border-width: 3px; }
-        100% { width: 100px; height: 100px; opacity: 0; border-width: 1px; }
-    }
-    .spot-pin-burst-ring2 {
-        position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-        width: 20px; height: 20px; border-radius: 50%;
-        border: 2px solid #fb923c;
-        animation: burstRing 1.5s 0.3s ease-out forwards;
-        pointer-events: none; opacity: 0;
-    }
-    .spot-pin.new-post {
-        animation: newPostBounce 0.8s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    @keyframes newPostBounce {
-        0%   { transform: scale(1); }
-        15%  { transform: scale(1.3); }
-        30%  { transform: scale(0.9); }
-        50%  { transform: scale(1.15); }
-        70%  { transform: scale(0.95); }
-        100% { transform: scale(1); }
-    }
-    .spot-pin.new-post .spot-pin-photo {
-        animation: photoPop 0.6s 0.1s ease-out;
-    }
-    @keyframes photoPop {
-        0%   { box-shadow: 0 0 0 0 rgba(245,158,11,0.6); }
-        50%  { box-shadow: 0 0 0 8px rgba(245,158,11,0.3); }
-        100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
-    }
-    .spot-pin-new-label {
-        position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
-        background: linear-gradient(135deg, #f59e0b, #ea580c);
-        color: white; font-size: 9px; font-weight: 800;
-        padding: 2px 8px; border-radius: 8px;
-        white-space: nowrap; pointer-events: none;
-        animation: newLabelFade 4s ease-out forwards;
-        box-shadow: 0 2px 8px rgba(245,158,11,0.4);
-    }
-    @keyframes newLabelFade {
-        0%   { opacity: 0; transform: translateX(-50%) translateY(4px); }
-        10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
-        80%  { opacity: 1; }
-        100% { opacity: 0; transform: translateX(-50%) translateY(-6px); }
-    }
-
     @keyframes pinBounce {
         0%,100% { transform: translateY(0); }
         30% { transform: translateY(-16px); }
@@ -312,8 +217,8 @@
     }
     .spot-pin.bouncing { animation: pinBounce 0.6s ease; }
 
-    .cat-btn { background: var(--color-white); color: var(--color-ink-mid); border-color: var(--color-border); box-shadow: none; }
-    .cat-btn.active { background: var(--color-ink); color: var(--color-cream); border-color: var(--color-ink); box-shadow: none; }
+    .cat-btn { background: #fff; color: var(--color-ink-mid); cursor: pointer; }
+    .cat-btn.active { background: #1a1a1a; color: #fff; }
 
     .dist-btn.active { background: var(--color-coral); color: white; }
 
@@ -388,7 +293,7 @@ function initApp() {
     // ==========================================
     var mapEl = document.getElementById('map');
     var map = new google.maps.Map(mapEl, {
-        center: { lat: 35.6360, lng: 139.6520 },
+        center: { lat: 35.6420, lng: 139.6510 },
         zoom: 14,
         disableDefaultUI: true,
         zoomControl: true,
@@ -401,15 +306,17 @@ function initApp() {
     });
 
     var catPalette = {
-        'スポーツ少年団': { emoji:'⚽', border:'#f59e0b', bg:'#fef3c7', fg:'#92400e', grad:'linear-gradient(135deg,#fbbf24,#f59e0b)' },
-        '個人教室':      { emoji:'🎹', border:'#a855f7', bg:'#f3e8ff', fg:'#6b21a8', grad:'linear-gradient(135deg,#c084fc,#9333ea)' },
-        '塾・学習':      { emoji:'📚', border:'#3b82f6', bg:'#dbeafe', fg:'#1e40af', grad:'linear-gradient(135deg,#60a5fa,#2563eb)' },
-        '水泳・体操':    { emoji:'🏊', border:'#06b6d4', bg:'#cffafe', fg:'#155e75', grad:'linear-gradient(135deg,#22d3ee,#0891b2)' },
-        '武道':          { emoji:'🥋', border:'#dc2626', bg:'#fee2e2', fg:'#991b1b', grad:'linear-gradient(135deg,#f87171,#dc2626)' },
-        '英語・語学':    { emoji:'🌍', border:'#059669', bg:'#d1fae5', fg:'#065f46', grad:'linear-gradient(135deg,#34d399,#059669)' },
-        '施設':          { emoji:'🏊', border:'#06b6d4', bg:'#cffafe', fg:'#155e75', grad:'linear-gradient(135deg,#22d3ee,#0891b2)' }
+        'スポーツ少年団': { emoji:'⚽', bg:'#FFF0E0', fg:'#E8704A' },
+        '個人教室':      { emoji:'🎵', bg:'#EEF0FF', fg:'#5B5BD6' },
+        '塾・学習':      { emoji:'📖', bg:'#FFF8E0', fg:'#C9973A' },
+        '水泳・体操':    { emoji:'🏊', bg:'#E0F4FF', fg:'#3A9CC9' },
+        'バレエ・ダンス': { emoji:'🩰', bg:'#FFE0F4', fg:'#C93A8A' },
+        '武道':          { emoji:'🥋', bg:'#F0F0F0', fg:'#444444' },
+        '英語・語学':    { emoji:'🌍', bg:'#E0FFE8', fg:'#3AC95B' },
+        '公園・遊び場':  { emoji:'🌳', bg:'#E8FFE0', fg:'#5BC93A' },
+        '施設':          { emoji:'🌳', bg:'#E8FFE0', fg:'#5BC93A' }
     };
-    var defPal = { emoji:'📍', border:'#94a3b8', bg:'#f1f5f9', fg:'#475569', grad:'linear-gradient(135deg,#94a3b8,#64748b)' };
+    var defPal = { emoji:'✨', bg:'#F5F0FF', fg:'#7B5BD6' };
     function getPal(cat) { if(!cat) return defPal; for(var k in catPalette){ if(cat.indexOf(k)!==-1) return catPalette[k]; } return defPal; }
 
     var allSpots = @json($spots);
@@ -465,11 +372,13 @@ function initApp() {
         { name: '用賀小学校', lat: 35.63300, lng: 139.63300 },
     ];
     var schoolSelect = document.getElementById('school-select');
-    schools.forEach(function(s) {
-        var opt = document.createElement('option');
-        opt.value = s.name; opt.textContent = s.name;
-        schoolSelect.appendChild(opt);
-    });
+    if (schoolSelect) {
+        schools.forEach(function(s) {
+            var opt = document.createElement('option');
+            opt.value = s.name; opt.textContent = s.name;
+            schoolSelect.appendChild(opt);
+        });
+    }
 
     var selectedSchool = null;
     var filterDistanceKm = 1;
@@ -500,10 +409,11 @@ function initApp() {
     // School filter controls
     // ==========================================
     window.onSchoolChange = function() {
+        if (!schoolSelect) return;
         var name = schoolSelect.value;
         if (!name) { clearSchoolFilter(); return; }
         selectedSchool = schools.find(function(s){ return s.name === name; });
-        document.getElementById('school-clear').classList.remove('hidden');
+        var clr = document.getElementById('school-clear'); if(clr) clr.classList.remove('hidden');
         drawSchoolCircle();
         reapplyFilters();
     };
@@ -511,14 +421,14 @@ function initApp() {
     window.setDistance = function(km) {
         filterDistanceKm = km;
         document.querySelectorAll('.dist-btn').forEach(function(b){ b.classList.remove('active'); });
-        document.getElementById('dist-'+km+'km').classList.add('active');
+        var btn = document.getElementById('dist-'+km+'km'); if(btn) btn.classList.add('active');
         if (selectedSchool) { drawSchoolCircle(); reapplyFilters(); }
     };
 
     window.clearSchoolFilter = function() {
         selectedSchool = null;
-        schoolSelect.value = '';
-        document.getElementById('school-clear').classList.add('hidden');
+        if(schoolSelect) schoolSelect.value = '';
+        var clr = document.getElementById('school-clear'); if(clr) clr.classList.add('hidden');
         if (schoolCircle) { schoolCircle.setMap(null); schoolCircle = null; }
         if (schoolLabel) { schoolLabel.setMap(null); schoolLabel = null; }
         reapplyFilters();
@@ -573,38 +483,16 @@ function initApp() {
     // ==========================================
     // Pin HTML builder
     // ==========================================
-    function buildPinHtml(spot, pal, photo) {
-        var ph = photo ? '<img src="'+photo+'" alt="">' : '<div class="spot-pin-photo-placeholder" style="background:'+pal.grad+';"><span>'+pal.emoji+'</span></div>';
-        var hasAmbPost = spot.latest_ambassador_post;
-        var ambIndicator = hasAmbPost ? '<div class="spot-pin-amb-glow"></div>' : '';
-
-        // Compact dots (always visible)
-        var dots = [];
-        if(hasAmbPost) dots.push('<span class="spot-pin-dot" style="background:#fef3c7;" title="通信あり">⭐</span>');
-        if(spot.has_parent_duty) dots.push('<span class="spot-pin-dot" style="background:#fee2e2;" title="当番あり">📋</span>');
-        if(spot.osagari_count > 0) dots.push('<span class="spot-pin-dot" style="background:#dcfce7;" title="お下がり有">🎁</span>');
-        var dotsHtml = dots.length ? '<div class="spot-pin-dots">'+dots.join('')+'</div>' : '';
-
-        // Full badges (shown on hover/active)
-        var badges = [], badgeItems = [];
-        if(hasAmbPost) badgeItems.push('<span class="spot-pin-badge spot-pin-amb-badge">⭐ 通信</span>');
-        if(spot.monthly_fee_range) badgeItems.push('<span class="spot-pin-badge" style="color:#b45309;">💰'+spot.monthly_fee_range+'</span>');
-        if(spot.has_parent_duty) badgeItems.push('<span class="spot-pin-badge" style="color:#dc2626;">当番あり</span>');
-        if(spot.transfer_available) badgeItems.push('<span class="spot-pin-badge" style="color:#2563eb;">振替OK</span>');
-        if(spot.osagari_count > 0) badgeItems.push('<span class="spot-pin-badge" style="background:#dcfce7;color:#15803d;">🎁 お下がり</span>');
-        var badgesHtml = badgeItems.length ? '<div class="spot-pin-badges">'+badgeItems.join('')+'</div>' : '';
-
-        return '<div class="spot-pin" data-id="'+spot.id+'">'+ambIndicator+
-            '<div class="spot-pin-photo" style="border-color:'+(hasAmbPost?'#f59e0b':pal.border)+';">'+ph+'</div>'+
-            '<div class="spot-pin-tail" style="background:'+(hasAmbPost?'#f59e0b':pal.border)+';"></div>'+
-            '<div class="spot-pin-label">'+spot.title+'</div>'+
-            dotsHtml + badgesHtml +
+    function buildPinHtml(spot, pal) {
+        return '<div class="spot-pin" data-id="'+spot.id+'">'+
+            '<div class="spot-pin-circle" style="background:'+pal.bg+';border-color:white;">'+pal.emoji+'</div>'+
+            '<div class="spot-pin-label" title="'+spot.title+'">'+spot.title+'</div>'+
             '</div>';
     }
 
-    function createPinElement(spot, pal, photo, faded) {
+    function createPinElement(spot, pal, faded) {
         var div = document.createElement('div');
-        div.innerHTML = buildPinHtml(spot, pal, photo);
+        div.innerHTML = buildPinHtml(spot, pal);
         if (faded) {
             var pin = div.querySelector('.spot-pin');
             if (pin) pin.classList.add('faded');
@@ -629,9 +517,9 @@ function initApp() {
             if(isNaN(lat)||isNaN(lng)) return;
             if(filter && filter!=='すべて' && (!spot.category || spot.category.indexOf(filter)===-1)) return;
 
-            var pal = getPal(spot.category), photo = photoOf(spot);
+            var pal = getPal(spot.category);
             var inRange = isSpotInRange(spot);
-            var pinEl = createPinElement(spot, pal, photo, !inRange);
+            var pinEl = createPinElement(spot, pal, !inRange);
 
             var marker = new google.maps.marker.AdvancedMarkerElement({
                 position: { lat: lat, lng: lng },
@@ -640,11 +528,11 @@ function initApp() {
             });
 
             pinEl.addEventListener('click', function() {
-                openDetail(spot, pal, photo, marker);
+                openDetail(spot, pal, marker);
             });
 
             gMarkers.push(marker);
-            markerMap[spot.id] = { marker: marker, spot: spot, pal: pal, photo: photo, inRange: inRange, pinEl: pinEl };
+            markerMap[spot.id] = { marker: marker, spot: spot, pal: pal, inRange: inRange, pinEl: pinEl };
 
             if (inRange) {
                 clusterableMarkers.push(marker);
@@ -846,10 +734,8 @@ function initApp() {
             var inRange = isSpotInRange(spot);
             if (selectedSchool && !inRange) return;
 
-            var pal = getPal(spot.category), photo = photoOf(spot);
-            var thumbHtml = photo
-                ? '<div class="sidebar-card-thumb"><img src="'+photo+'"></div>'
-                : '<div class="sidebar-card-thumb" style="background:'+pal.grad+';"><span style="font-size:28px;">'+pal.emoji+'</span></div>';
+            var pal = getPal(spot.category);
+            var thumbHtml = '<div class="sidebar-card-thumb" style="background:'+pal.bg+';"><span style="font-size:28px;">'+pal.emoji+'</span></div>';
 
             var badgeHtml = '';
             if(spot.policy_type) {
@@ -893,7 +779,7 @@ function initApp() {
         map.setZoom(16);
         setTimeout(function(){
             bouncePin(id);
-            openDetail(entry.spot, entry.pal, entry.photo, entry.marker);
+            openDetail(entry.spot, entry.pal, entry.marker);
         }, 600);
     };
 
@@ -952,124 +838,67 @@ function initApp() {
         });
     })();
 
-    function openDetail(spot, pal, photo, marker) {
+    function openDetail(spot, pal, marker) {
         if(activeCardEl) activeCardEl.classList.remove('active');
         var entry = markerMap[spot.id];
         if(entry && entry.pinEl) { entry.pinEl.classList.add('active'); activeCardEl = entry.pinEl; }
 
-        if(photo) { heroBg.innerHTML='<img src="'+photo+'" style="width:100%;height:100%;object-fit:cover;">'; heroBg.parentElement.style.minHeight='260px'; }
-        else { heroBg.innerHTML='<div style="width:100%;height:100%;background:'+pal.grad+';display:flex;align-items:center;justify-content:center;"><span style="font-size:64px;">'+pal.emoji+'</span></div>'; heroBg.parentElement.style.minHeight='220px'; }
+        // Color block + emoji header (no photos)
+        heroBg.innerHTML='<div style="width:100%;height:100%;background:'+pal.bg+';display:flex;align-items:center;justify-content:center;"><span style="font-size:48px;">'+pal.emoji+'</span></div>';
+        heroBg.parentElement.style.minHeight='180px';
 
-        var bH = '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);color:white;border:1px solid rgba(255,255,255,0.3);">'+pal.emoji+' '+(spot.category||'')+'</span>';
-        if(spot.age_range) bH+='<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);color:white;border:1px solid rgba(255,255,255,0.3);">🎒 '+spot.age_range+'歳</span>';
+        var bH = '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800;background:'+pal.bg+';color:'+pal.fg+';border:1px solid '+pal.fg+'33;">'+pal.emoji+' '+(spot.category||'')+'</span>';
         heroBadges.innerHTML=bH;
         heroTitle.textContent=spot.title;
+        heroTitle.style.color=pal.fg;
 
-        var tags = spot.category_tags||[], timeAgo = spot.created_at?timeSince(new Date(spot.created_at)):'たった今';
         var body = '';
 
-        /* v2: 月謝・当番・振替・指導方針バッジ
-        var lb = [];
-        if(spot.monthly_fee_range) lb.push('<div class="lesson-badge" style="background:#fef3c7;color:#92400e;">💰 '+spot.monthly_fee_range+'</div>');
-        if(spot.has_parent_duty) lb.push('<div class="lesson-badge" style="background:#fee2e2;color:#dc2626;">📋 当番あり</div>');
-        else lb.push('<div class="lesson-badge" style="background:#dcfce7;color:#16a34a;">📋 当番なし</div>');
-        if(spot.policy_type) {
-            var pc=spot.policy_type==='褒めて伸ばす'?'background:#dcfce7;color:#166534;':spot.policy_type==='厳しく鍛える'?'background:#fee2e2;color:#991b1b;':'background:#dbeafe;color:#1e40af;';
-            var pi=spot.policy_type==='褒めて伸ばす'?'🌱':spot.policy_type==='厳しく鍛える'?'🔥':'⚖️';
-            lb.push('<div class="lesson-badge" style="'+pc+'">'+pi+' '+spot.policy_type+'</div>');
-        }
-        if(spot.transfer_available) lb.push('<div class="lesson-badge" style="background:#dbeafe;color:#1e40af;">🔄 振替OK</div>');
-        else lb.push('<div class="lesson-badge" style="background:#f3f4f6;color:#6b7280;">🔄 振替不可</div>');
-        if(spot.osagari_count > 0) lb.push('<div class="lesson-badge" style="background:#dcfce7;color:#15803d;border:1px solid #86efac;">🎁 お下がり有</div>');
-        body += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">'+lb.join('')+'</div>';
-        */
+        // 月謝
+        body += '<div style="background:#f9fafb;border-radius:16px;padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">';
+        body += '<span style="font-size:20px;">💰</span>';
+        body += '<div><p style="font-size:11px;font-weight:700;color:#9ca3af;">月謝</p>';
+        body += '<p style="font-size:14px;font-weight:800;color:#374151;">'+(spot.monthly_fee_range || '¥ ——　知っている方は教えてください')+'</p>';
+        body += '</div></div>';
 
-        // マイ・スクールからの徒歩分数
-        var walkBadge = getWalkingBadge(spot);
-        if (walkBadge) {
-            body += '<div style="margin-bottom:12px;">'+walkBadge+'</div>';
-        }
-
-        var infos = [];
-        var detailSchool = mySchool;
-        if ((!detailSchool || !detailSchool.lat) && allSchools.length > 0) {
-            detailSchool = findNearestSchool(parseFloat(spot.lat), parseFloat(spot.lng));
-        }
-        if (detailSchool && detailSchool.lat) {
-            var wMins = walkingMinutes(detailSchool.lat, detailSchool.lng, parseFloat(spot.lat), parseFloat(spot.lng));
-            infos.push('<div class="info-card" style="background:'+(wMins<=10?'#f0fdf4':wMins<=20?'#fffbeb':'#fef2f2')+';"><p style="font-size:20px;margin-bottom:2px;">🚶</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">学校から</p><p style="font-size:16px;font-weight:900;color:'+(wMins<=10?'#16a34a':wMins<=20?'#d97706':'#dc2626')+';">'+wMins+'<span style="font-size:11px;">分</span></p></div>');
-        }
-        if(spot.age_range) infos.push('<div class="info-card"><p style="font-size:20px;margin-bottom:2px;">🎒</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">対象年齢</p><p style="font-size:13px;font-weight:900;color:#1f2937;">'+spot.age_range+'歳</p></div>');
-        if(spot.parent_role) infos.push('<div class="info-card"><p style="font-size:20px;margin-bottom:2px;">👨‍👩‍👧</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">親の役割</p><p style="font-size:11px;font-weight:800;color:#1f2937;">'+spot.parent_role+'</p></div>');
-        infos.push('<div class="info-card"><p style="font-size:20px;margin-bottom:2px;">🕐</p><p style="font-size:10px;font-weight:700;color:#9ca3af;">投稿</p><p style="font-size:13px;font-weight:900;color:#1f2937;">'+timeAgo+'</p></div>');
-        body += '<div style="display:grid;grid-template-columns:repeat('+Math.min(infos.length,3)+',1fr);gap:8px;margin-bottom:16px;">'+infos.join('')+'</div>';
-
-        if(spot.note) {
-            body += '<div style="background:#f9fafb;border-radius:20px;padding:16px;margin-bottom:16px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:32px;height:32px;border-radius:50%;background:'+pal.grad+';display:flex;align-items:center;justify-content:center;"><span style="font-size:14px;color:white;">🙋</span></div><div><p style="font-size:12px;font-weight:800;color:#374151;">ご近所さんの口コミ</p></div></div><p style="font-size:13px;color:#4b5563;line-height:1.7;font-weight:500;">'+spot.note+'</p></div>';
-        }
-
+        // 口コミ一覧
         var reviews = spot.reviews||[];
+        var vibeLabels = {'ガチ勢向き':'🔥 ガチ勢向き','バランス':'⚖️ バランス','のびのび':'🌱 のびのび','ガチ勢':'🔥 ガチ勢向き','エンジョイ勢':'⚖️ バランス','のびのび系':'🌱 のびのび'};
+        var parentLabels = {'ほぼなし':'😊 ほぼなし','月数回':'🤝 月数回','毎週ある':'💪 毎週ある'};
+
         if(reviews.length) {
-            body += '<div style="margin-bottom:16px;"><p style="font-size:13px;font-weight:800;color:#374151;margin-bottom:10px;">📝 体験レポート（'+reviews.length+'件）</p>';
-
-            var priceLabels = {'0':'〜3,000円','3000':'3,000〜6,000円','6000':'6,000〜10,000円','10000':'10,000円〜'};
-
+            body += '<div style="margin-bottom:16px;"><p style="font-size:14px;font-weight:800;color:#374151;margin-bottom:10px;">口コミ（'+reviews.length+'件）</p>';
             reviews.forEach(function(r) {
                 body += '<div style="background:#f9fafb;border-radius:16px;padding:14px;margin-bottom:8px;">';
-                var tags = [];
+                var rtags = [];
                 if(r.vibe_tag) {
-                    var vc={'ガチ勢':'background:#fee2e2;color:#dc2626;','エンジョイ勢':'background:#dcfce7;color:#16a34a;','のびのび系':'background:#fef3c7;color:#b45309;','受験特化':'background:#dbeafe;color:#2563eb;'};
-                    tags.push('<span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800;'+(vc[r.vibe_tag]||'')+'">'+r.vibe_tag+'</span>');
+                    var vl = vibeLabels[r.vibe_tag] || r.vibe_tag;
+                    rtags.push('<span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#E8704A;color:white;">'+vl+'</span>');
                 }
-                if(r.monthly_fee !== null && r.monthly_fee !== undefined) {
-                    var pl = priceLabels[String(r.monthly_fee)] || '';
-                    if(pl) tags.push('<span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800;background:#f3f4f6;color:#6b7280;">💰 '+pl+'</span>');
+                if(r.parent_involvement) {
+                    var pl = parentLabels[r.parent_involvement] || r.parent_involvement;
+                    rtags.push('<span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#f3f4f6;color:#374151;">'+pl+'</span>');
                 }
-                if(tags.length) body += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">'+tags.join('')+'</div>';
-                if(r.body) body += '<p style="font-size:13px;color:#4b5563;line-height:1.7;">「'+r.body+'」</p>';
+                if(rtags.length) body += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'+rtags.join('')+'</div>';
+                if(r.body) body += '<p style="font-size:14px;color:#4b5563;line-height:1.7;">「'+r.body+'」</p>';
                 body += '</div>';
             });
             body += '</div>';
-
-            {{-- v2: レーダーチャート表示は非表示 --}}
-        }
-
-        if(tags.length) {
-            body += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">';
-            tags.forEach(function(t){ body += '<span class="tag-pill">#'+t+'</span>'; });
+        } else {
+            body += '<div style="background:#f9fafb;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;">';
+            body += '<p style="font-size:14px;color:#9ca3af;">まだ口コミがありません</p>';
             body += '</div>';
         }
 
-        /* v2: Ambassador post section
-        if(spot.latest_ambassador_post) {
-            var ap = spot.latest_ambassador_post;
-            var apPhoto = ap.photo_path && ap.photo_path.startsWith('http') ? ap.photo_path : '/storage/' + ap.photo_path;
-            body += '<div style="margin-bottom:16px;border:2px solid #fde68a;border-radius:20px;overflow:hidden;background:linear-gradient(180deg,#fffbeb,#ffffff);">';
-            body += '<div style="padding:12px 14px 8px;display:flex;align-items:center;gap:8px;">';
-            body += '<div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;animation:ambPulse 2s ease-in-out infinite;"></div>';
-            body += '<p style="font-size:12px;font-weight:800;color:#92400e;">⭐ 公式アンバサダー通信</p></div>';
-            body += '<img src="'+apPhoto+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;" loading="lazy">';
-            body += '<div style="padding:12px 14px 14px;">';
-            if(ap.mood_tag) body += '<span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800;background:#fef3c7;color:#92400e;margin-bottom:6px;">'+ap.mood_tag+'</span>';
-            body += '<p style="font-size:13px;color:#4b5563;line-height:1.6;font-weight:500;">'+ap.message+'</p>';
-            body += '<a href="/ambassador/'+(spot.ambassador_user_id||'')+'" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:700;color:#d97706;text-decoration:none;">この先生の声をもっと聞く →</a>';
-            body += '</div></div>';
-        }
-        */
+        // 口コミを投稿ボタン（目立つコーラル）
+        body += '<button onclick="openReviewForm('+spot.id+')" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border-radius:20px;background:#E8704A;color:white;font-weight:800;font-size:15px;border:none;cursor:pointer;margin-bottom:12px;">📝 口コミを投稿</button>';
 
         // 外部リンク
         if(spot.link_url) {
-            body += '<a href="'+spot.link_url+'" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;background:#f0f9ff;color:#2563eb;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:12px;border:1px solid #bfdbfe;">🔗 外部サイトを見る</a>';
+            body += '<a href="'+spot.link_url+'" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-radius:16px;background:#f0f9ff;color:#2563eb;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:12px;border:1px solid #bfdbfe;">🔗 外部サイトを見る</a>';
         }
 
-        body += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">';
-        body += '<button onclick="toggleFavorite('+spot.id+', this)" id="fav-btn-'+spot.id+'" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:'+(favSet.has(spot.id)?'#fef3c7':'#f9fafb')+';color:'+(favSet.has(spot.id)?'#d97706':'#9ca3af')+';font-weight:700;font-size:13px;border:1px solid '+(favSet.has(spot.id)?'#fde68a':'#e5e7eb')+';cursor:pointer;">'+(favSet.has(spot.id)?'💛 お気に入り済':'🤍 お気に入り')+'</button>';
-        body += '<button onclick="openReviewForm('+spot.id+')" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:#fef3c7;color:#92400e;font-weight:700;font-size:13px;border:1px solid #fde68a;cursor:pointer;">📝 体験レポートを書く</button>';
-        body += '</div>';
-        body += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
-        body += '<button onclick="shareSpot()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:#f0fdf4;color:#16a34a;font-weight:700;font-size:13px;border:none;cursor:pointer;">シェア</button>';
-        body += '<button onclick="closeDetail()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:16px;background:#111827;color:white;font-weight:700;font-size:13px;border:none;cursor:pointer;">閉じる</button>';
-        body += '</div>';
+        body += '<button onclick="closeDetail()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:14px;border-radius:16px;background:#111827;color:white;font-weight:700;font-size:14px;border:none;cursor:pointer;">閉じる</button>';
 
         detailBody.innerHTML = body;
 
@@ -1086,6 +915,9 @@ function initApp() {
         });
         detailOpen = true;
 
+        // Hide all markers while detail is open
+        gMarkers.forEach(function(m){ if(m.content) m.content.style.opacity='0'; });
+
         map.panTo({ lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) });
     }
 
@@ -1097,6 +929,9 @@ function initApp() {
         backdrop.style.background = 'rgba(0,0,0,0)';
 
         if(activeCardEl){ activeCardEl.classList.remove('active'); activeCardEl = null; }
+
+        // Show all markers again
+        gMarkers.forEach(function(m){ if(m.content) m.content.style.opacity='1'; });
 
         setTimeout(function(){
             overlay.style.pointerEvents = 'none';
@@ -1137,31 +972,35 @@ function initApp() {
     // Search
     // ==========================================
     var searchInput=document.getElementById('map-search'), dropdown=document.getElementById('search-dropdown'), clearBtn=document.getElementById('search-clear');
-    searchInput.addEventListener('input', function() {
-        var q=this.value.toLowerCase().trim();
-        clearBtn.classList.toggle('hidden',!q);
-        if(!q){dropdown.classList.add('hidden');return;}
-        var results=allSpots.filter(function(s){
-            var t=(s.category_tags||[]).join(' ').toLowerCase();
-            return (s.title&&s.title.toLowerCase().indexOf(q)!==-1)||(s.category&&s.category.toLowerCase().indexOf(q)!==-1)||(s.monthly_fee_range&&s.monthly_fee_range.indexOf(q)!==-1)||t.indexOf(q)!==-1;
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            var q=this.value.toLowerCase().trim();
+            clearBtn.classList.toggle('hidden',!q);
+            if(!q){dropdown.classList.add('hidden');return;}
+            var results=allSpots.filter(function(s){
+                var t=(s.category_tags||[]).join(' ').toLowerCase();
+                return (s.title&&s.title.toLowerCase().indexOf(q)!==-1)||(s.category&&s.category.toLowerCase().indexOf(q)!==-1)||(s.monthly_fee_range&&s.monthly_fee_range.indexOf(q)!==-1)||t.indexOf(q)!==-1;
+            });
+            if(!results.length){dropdown.innerHTML='<div style="padding:16px;text-align:center;color:#9ca3af;font-size:13px;">見つかりませんでした</div>';dropdown.classList.remove('hidden');return;}
+            var html='';
+            results.forEach(function(s){
+                var pal=getPal(s.category);
+                html+='<div class="search-item" onclick="jumpToSpot('+s.id+')"><div class="search-thumb" style="background:'+pal.bg+';"><span style="font-size:18px;">'+pal.emoji+'</span></div><div style="flex:1;"><p style="font-size:13px;font-weight:700;color:#1f2937;">'+s.title+'</p><p style="font-size:11px;color:#9ca3af;">'+(s.category||'')+(s.monthly_fee_range?' · '+s.monthly_fee_range:'')+'</p></div></div>';
+            });
+            dropdown.innerHTML=html; dropdown.classList.remove('hidden');
         });
-        if(!results.length){dropdown.innerHTML='<div style="padding:16px;text-align:center;color:#9ca3af;font-size:13px;">見つかりませんでした</div>';dropdown.classList.remove('hidden');return;}
-        var html='';
-        results.forEach(function(s){
-            var pal=getPal(s.category);
-            html+='<div class="search-item" onclick="jumpToSpot('+s.id+')"><div class="search-thumb" style="background:'+pal.bg+';"><span style="font-size:18px;">'+pal.emoji+'</span></div><div style="flex:1;"><p style="font-size:13px;font-weight:700;color:#1f2937;">'+s.title+'</p><p style="font-size:11px;color:#9ca3af;">'+(s.category||'')+(s.monthly_fee_range?' · '+s.monthly_fee_range:'')+'</p></div></div>';
-        });
-        dropdown.innerHTML=html; dropdown.classList.remove('hidden');
-    });
+        document.addEventListener('click', function(e){ if(!e.target.closest('#map-search')&&!e.target.closest('#search-dropdown')) dropdown.classList.add('hidden'); });
+    }
     window.jumpToSpot = function(id) {
         var entry=markerMap[id]; if(!entry) return;
-        dropdown.classList.add('hidden'); searchInput.value=''; clearBtn.classList.add('hidden');
+        if(dropdown) dropdown.classList.add('hidden');
+        if(searchInput) searchInput.value='';
+        if(clearBtn) clearBtn.classList.add('hidden');
         map.panTo({ lat: parseFloat(entry.spot.lat), lng: parseFloat(entry.spot.lng) });
         map.setZoom(17);
-        setTimeout(function(){ bouncePin(id); openDetail(entry.spot,entry.pal,entry.photo,entry.marker); },800);
+        setTimeout(function(){ bouncePin(id); openDetail(entry.spot,entry.pal,entry.marker); },800);
     };
-    window.clearSearch = function(){ searchInput.value=''; clearBtn.classList.add('hidden'); dropdown.classList.add('hidden'); renderSpots('すべて'); };
-    document.addEventListener('click', function(e){ if(!e.target.closest('#map-search')&&!e.target.closest('#search-dropdown')) dropdown.classList.add('hidden'); });
+    window.clearSearch = function(){ if(searchInput) searchInput.value=''; if(clearBtn) clearBtn.classList.add('hidden'); if(dropdown) dropdown.classList.add('hidden'); renderSpots('すべて'); };
 
     renderSpots('すべて');
 
@@ -1177,7 +1016,7 @@ function initApp() {
                 map.setZoom(16);
                 setTimeout(function() {
                     bouncePin(focusId);
-                    openDetail(entry.spot, entry.pal, entry.photo, entry.marker);
+                    openDetail(entry.spot, entry.pal, entry.marker);
                 }, 600);
             }
         }, 500);

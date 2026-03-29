@@ -22,6 +22,7 @@ class Review extends Model
         'teacher_passion',
         'parent_burden',
         'vibe_tag',
+        'parent_involvement',
     ];
 
     protected $casts = [

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Spot;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 /**
  * みっけ 実在スポットシーダー
@@ -25,7 +25,7 @@ class MikkeAreaSpotSeeder extends Seeder
 {
     public function run(): void
     {
-        $userId = User::first()?->id ?? 1;
+        $userId = User::first()?->id ?? null;
 
         $spots = [
 
@@ -33,30 +33,30 @@ class MikkeAreaSpotSeeder extends Seeder
             // ⚽ スポーツ少年団・サッカー
             // ============================================================
             [
-                'title'     => '弦巻サッカークラブ',
-                'lat'       => 35.63970,
-                'lng'       => 139.65301,
-                'category'  => 'スポーツ少年団',
-                'link_url'  => null,
+                'title' => '弦巻サッカークラブ',
+                'lat' => 35.63970,
+                'lng' => 139.65301,
+                'category' => 'スポーツ少年団',
+                'link_url' => null,
                 'age_range' => '小学生',
                 // 活動場所：弦巻小学校校庭（世田谷区弦巻1-9-18）
                 // 世田谷少年サッカー連盟加盟
             ],
             [
-                'title'     => '駒沢小サッカークラブ',
-                'lat'       => 35.64590,
-                'lng'       => 139.65610,
-                'category'  => 'スポーツ少年団',
-                'link_url'  => 'https://komazawaelsc.wixsite.com/home',
+                'title' => '駒沢小サッカークラブ',
+                'lat' => 35.64590,
+                'lng' => 139.65610,
+                'category' => 'スポーツ少年団',
+                'link_url' => 'https://komazawaelsc.wixsite.com/home',
                 'age_range' => '小学生',
                 // 活動場所：駒沢小学校（世田谷区駒沢2-10-6付近）
             ],
             [
-                'title'     => '松丘フットボールクラブ',
-                'lat'       => 35.63885,
-                'lng'       => 139.64423,
-                'category'  => 'スポーツ少年団',
-                'link_url'  => 'https://sites.google.com/site/matsugaokafootballclub/',
+                'title' => '松丘フットボールクラブ',
+                'lat' => 35.63885,
+                'lng' => 139.64423,
+                'category' => 'スポーツ少年団',
+                'link_url' => 'https://sites.google.com/site/matsugaokafootballclub/',
                 'age_range' => '小学生',
                 // 活動場所：松丘小学校校庭（世田谷区弦巻3-23-12）
             ],
@@ -72,11 +72,11 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🏀 ミニバスケットボール
             // ============================================================
             [
-                'title'     => '桜スポーツ少年団（ミニバス）',
-                'lat'       => 35.64299,
-                'lng'       => 139.64535,
-                'category'  => 'スポーツ少年団',
-                'link_url'  => 'https://sbbc1981.jp/',
+                'title' => '桜スポーツ少年団（ミニバス）',
+                'lat' => 35.64299,
+                'lng' => 139.64535,
+                'category' => 'スポーツ少年団',
+                'link_url' => 'https://sbbc1981.jp/',
                 'age_range' => '小学生',
                 // 活動場所：桜小学校体育館
                 // 弦巻・松丘・桜・城山・世田谷・若林の小学生が参加
@@ -87,11 +87,11 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🏃 地域スポーツクラブ（複合）
             // ============================================================
             [
-                'title'     => 'こまざわスポーツ文化クラブ',
-                'lat'       => 35.64590,
-                'lng'       => 139.65610,
-                'category'  => 'スポーツ少年団',
-                'link_url'  => 'https://www.s-kscc.com/',
+                'title' => 'こまざわスポーツ文化クラブ',
+                'lat' => 35.64590,
+                'lng' => 139.65610,
+                'category' => 'スポーツ少年団',
+                'link_url' => 'https://www.s-kscc.com/',
                 'age_range' => '小学生',
                 // 駒沢小学校を拠点とする地域総合型スポーツクラブ
                 // 2001年 駒沢小学校創立百周年を機に設立
@@ -101,20 +101,20 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🏊 水泳
             // ============================================================
             [
-                'title'     => '東京ドルフィンクラブ 駒沢スイミングスクール',
-                'lat'       => 35.633341,
-                'lng'       => 139.654435,
-                'category'  => '水泳・体操',
-                'link_url'  => 'https://tokyo-dolphin.jp/komazawa/',
+                'title' => '東京ドルフィンクラブ 駒沢スイミングスクール',
+                'lat' => 35.633341,
+                'lng' => 139.654435,
+                'category' => '水泳・体操',
+                'link_url' => 'https://tokyo-dolphin.jp/komazawa/',
                 'age_range' => '0歳〜中学生',
                 // 住所：東京都世田谷区駒沢3-7-17
             ],
             [
-                'title'     => '世田谷スイミングスクール（世田谷学園内）',
-                'lat'       => 35.64280,
-                'lng'       => 139.66100,
-                'category'  => '水泳・体操',
-                'link_url'  => 'https://www.setagaya-ss.jp/',
+                'title' => '世田谷スイミングスクール（世田谷学園内）',
+                'lat' => 35.64280,
+                'lng' => 139.66100,
+                'category' => '水泳・体操',
+                'link_url' => 'https://www.setagaya-ss.jp/',
                 'age_range' => '幼児〜大人',
                 // 住所：東京都世田谷区三宿1-16-31 世田谷学園内
                 // # 要確認：座標は世田谷学園の推定値
@@ -124,42 +124,42 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🩰 バレエ・ダンス
             // ============================================================
             [
-                'title'     => 'スタジオマーティ 駒沢大学',
-                'lat'       => 35.64520,
-                'lng'       => 139.66230,
-                'category'  => '個人教室',
-                'link_url'  => 'https://www.studiomarty.co.jp/komazawadaigaku/',
+                'title' => 'スタジオマーティ 駒沢大学',
+                'lat' => 35.64520,
+                'lng' => 139.66230,
+                'category' => '個人教室',
+                'link_url' => 'https://www.studiomarty.co.jp/komazawadaigaku/',
                 'age_range' => '幼児〜大人',
                 // 住所：東京都世田谷区上馬4丁目付近
                 // 駒沢大学駅徒歩5分・三軒茶屋駅徒歩13分
                 // # 要確認：正確な番地が未確定
             ],
             [
-                'title'     => '酒井裕子バレエ&ダンススクール',
-                'lat'       => 35.63800,
-                'lng'       => 139.65200,
-                'category'  => '個人教室',
-                'link_url'  => null,
+                'title' => '酒井裕子バレエ&ダンススクール',
+                'lat' => 35.63800,
+                'lng' => 139.65200,
+                'category' => '個人教室',
+                'link_url' => null,
                 'age_range' => '幼児〜大人',
                 // 世田谷区弦巻、駒沢大学駅徒歩8分
                 // 駒沢公園通りの交差点付近、2階スタジオ
                 // # 要確認：正確な住所が未確定
             ],
             [
-                'title'     => 'NOAダンスアカデミー 駒沢校',
-                'lat'       => 35.64550,
-                'lng'       => 139.66340,
-                'category'  => '個人教室',
-                'link_url'  => 'https://www.noadance.com/komazawa/',
+                'title' => 'NOAダンスアカデミー 駒沢校',
+                'lat' => 35.64550,
+                'lng' => 139.66340,
+                'category' => '個人教室',
+                'link_url' => 'https://www.noadance.com/komazawa/',
                 'age_range' => '3歳〜大人',
                 // 住所：東京都世田谷区上馬4-2-7 8F
             ],
             [
-                'title'     => 'KZY DANCE COMPLEX',
-                'lat'       => 35.64400,
-                'lng'       => 139.65500,
-                'category'  => '個人教室',
-                'link_url'  => 'https://www.kzydancecomplex.com/komazawa',
+                'title' => 'KZY DANCE COMPLEX',
+                'lat' => 35.64400,
+                'lng' => 139.65500,
+                'category' => '個人教室',
+                'link_url' => 'https://www.kzydancecomplex.com/komazawa',
                 'age_range' => '幼児〜',
                 // 駒沢中学校・弦巻中学校エリアで活動
                 // # 要確認：正確な住所が未確定
@@ -169,21 +169,21 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🎹 音楽教室
             // ============================================================
             [
-                'title'     => 'カワイ音楽教室 MS桜新町',
-                'lat'       => 35.63340,
-                'lng'       => 139.64510,
-                'category'  => '個人教室',
-                'link_url'  => 'https://music.kawai.jp/search/detail/00E250',
+                'title' => 'カワイ音楽教室 MS桜新町',
+                'lat' => 35.63340,
+                'lng' => 139.64510,
+                'category' => '個人教室',
+                'link_url' => 'https://music.kawai.jp/search/detail/00E250',
                 'age_range' => '3歳〜大人',
                 // 住所：東京都世田谷区桜新町1-17-13 4F
                 // 桜新町駅徒歩2分
             ],
             [
-                'title'     => '音楽教室GUPPA! 世田谷スタジオ',
-                'lat'       => 35.64650,
-                'lng'       => 139.64810,
-                'category'  => '個人教室',
-                'link_url'  => 'https://www.guppaschool.com/setagayastudio',
+                'title' => '音楽教室GUPPA! 世田谷スタジオ',
+                'lat' => 35.64650,
+                'lng' => 139.64810,
+                'category' => '個人教室',
+                'link_url' => 'https://www.guppaschool.com/setagayastudio',
                 'age_range' => '幼児〜大人',
                 // 上町駅徒歩1分
                 // # 要確認：座標は上町駅付近の推定値
@@ -193,21 +193,21 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🥋 武道
             // ============================================================
             [
-                'title'     => '礼翔舘空手道 弦巻道場',
-                'lat'       => 35.63720,
-                'lng'       => 139.64890,
-                'category'  => '武道',
-                'link_url'  => 'https://mobile.reisyokan.jp/',
+                'title' => '礼翔舘空手道 弦巻道場',
+                'lat' => 35.63720,
+                'lng' => 139.64890,
+                'category' => '武道',
+                'link_url' => 'https://mobile.reisyokan.jp/',
                 'age_range' => '幼児〜大人',
                 // 活動場所：弦巻区民集会所（世田谷区弦巻5-1-18）
                 // 毎週日曜 13:00-14:00
             ],
             [
-                'title'     => '礼翔舘空手道 桜新町道場',
-                'lat'       => 35.63340,
-                'lng'       => 139.64510,
-                'category'  => '武道',
-                'link_url'  => 'https://mobile.reisyokan.jp/',
+                'title' => '礼翔舘空手道 桜新町道場',
+                'lat' => 35.63340,
+                'lng' => 139.64510,
+                'category' => '武道',
+                'link_url' => 'https://mobile.reisyokan.jp/',
                 'age_range' => '幼児〜大人',
                 // 桜新町エリアで活動
                 // # 要確認：桜新町の正確な活動場所が未確定
@@ -217,31 +217,31 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🌍 英語・語学
             // ============================================================
             [
-                'title'     => 'ECCジュニア 弦巻1丁目教室',
-                'lat'       => 35.63900,
-                'lng'       => 139.65100,
-                'category'  => '英語・語学',
-                'link_url'  => 'https://eccjuniorbs.jp/ht132190/',
+                'title' => 'ECCジュニア 弦巻1丁目教室',
+                'lat' => 35.63900,
+                'lng' => 139.65100,
+                'category' => '英語・語学',
+                'link_url' => 'https://eccjuniorbs.jp/ht132190/',
                 'age_range' => '幼児〜中学生',
                 // 世田谷区弦巻1丁目
                 // # 要確認：正確な番地が未確定
             ],
             [
-                'title'     => 'Kids Duo 駒沢大学',
-                'lat'       => 35.64670,
-                'lng'       => 139.66150,
-                'category'  => '英語・語学',
-                'link_url'  => 'https://www.kidsduo.com/classrooms/detail/1296/',
+                'title' => 'Kids Duo 駒沢大学',
+                'lat' => 35.64670,
+                'lng' => 139.66150,
+                'category' => '英語・語学',
+                'link_url' => 'https://www.kidsduo.com/classrooms/detail/1296/',
                 'age_range' => '3歳〜小学6年',
                 // 住所：東京都世田谷区駒沢2-11-1 駒沢フォーラムガーデン2F
                 // 駒沢大学駅徒歩3分
             ],
             [
-                'title'     => '駒沢英語英検教室 M English School',
-                'lat'       => 35.64500,
-                'lng'       => 139.65800,
-                'category'  => '英語・語学',
-                'link_url'  => 'https://www.m-english-school.com/',
+                'title' => '駒沢英語英検教室 M English School',
+                'lat' => 35.64500,
+                'lng' => 139.65800,
+                'category' => '英語・語学',
+                'link_url' => 'https://www.m-english-school.com/',
                 'age_range' => '小学生〜中学生',
                 // 世田谷区駒沢、最寄り駅：駒沢大学
                 // # 要確認：正確な住所が未確定
@@ -251,40 +251,40 @@ class MikkeAreaSpotSeeder extends Seeder
             // 📚 学習塾
             // ============================================================
             [
-                'title'     => '公文式 駒沢教室',
-                'lat'       => 35.64580,
-                'lng'       => 139.65780,
-                'category'  => '塾・学習',
-                'link_url'  => 'https://www.kumon.ne.jp/enter/search/classroom/1131680012/index.html',
+                'title' => '公文式 駒沢教室',
+                'lat' => 35.64580,
+                'lng' => 139.65780,
+                'category' => '塾・学習',
+                'link_url' => 'https://www.kumon.ne.jp/enter/search/classroom/1131680012/index.html',
                 'age_range' => '幼児〜高校生',
                 // 住所：東京都世田谷区駒沢2-4-10 コーポトマト102
             ],
             [
-                'title'     => '公文式 桜新町西教室',
-                'lat'       => 35.63250,
-                'lng'       => 139.64350,
-                'category'  => '塾・学習',
-                'link_url'  => 'https://www.kumon.ne.jp/enter/search/classroom/1813010015/index.html',
+                'title' => '公文式 桜新町西教室',
+                'lat' => 35.63250,
+                'lng' => 139.64350,
+                'category' => '塾・学習',
+                'link_url' => 'https://www.kumon.ne.jp/enter/search/classroom/1813010015/index.html',
                 'age_range' => '2歳〜高校生',
                 // 桜新町サザエさん通り沿い
                 // # 要確認：座標は桜新町駅西側の推定値
             ],
             [
-                'title'     => '明光義塾 桜新町教室',
-                'lat'       => 35.63380,
-                'lng'       => 139.64600,
-                'category'  => '塾・学習',
-                'link_url'  => null,
+                'title' => '明光義塾 桜新町教室',
+                'lat' => 35.63380,
+                'lng' => 139.64600,
+                'category' => '塾・学習',
+                'link_url' => null,
                 'age_range' => '小学生〜高校生',
                 // 桜新町駅徒歩3分
                 // # 要確認：座標は桜新町駅付近の推定値
             ],
             [
-                'title'     => 'ウィズダムアカデミー 駒沢桜新町校',
-                'lat'       => 35.64440,
-                'lng'       => 139.65500,
-                'category'  => '塾・学習',
-                'link_url'  => 'https://wisdom-academy.com/school/komazawa/',
+                'title' => 'ウィズダムアカデミー 駒沢桜新町校',
+                'lat' => 35.64440,
+                'lng' => 139.65500,
+                'category' => '塾・学習',
+                'link_url' => 'https://wisdom-academy.com/school/komazawa/',
                 'age_range' => '3歳〜12歳',
                 // 住所：東京都世田谷区駒沢2-18-9 コン・フォレスト3F
                 // 民間学童（プログラミング・そろばん・書道・アート）
@@ -294,30 +294,30 @@ class MikkeAreaSpotSeeder extends Seeder
             // 🌳 公園・遊び場・児童館
             // ============================================================
             [
-                'title'     => '駒沢オリンピック公園',
-                'lat'       => 35.63642,
-                'lng'       => 139.66501,
-                'category'  => 'その他',
-                'link_url'  => null,
+                'title' => '駒沢オリンピック公園',
+                'lat' => 35.63642,
+                'lng' => 139.66501,
+                'category' => 'その他',
+                'link_url' => null,
                 'age_range' => null,
                 // 住所：東京都世田谷区駒沢公園1-1
             ],
             [
-                'title'     => '駒沢はらっぱプレーパーク',
-                'lat'       => 35.63450,
-                'lng'       => 139.65600,
-                'category'  => 'その他',
-                'link_url'  => 'https://playpark.jp/komazawa/',
+                'title' => '駒沢はらっぱプレーパーク',
+                'lat' => 35.63450,
+                'lng' => 139.65600,
+                'category' => 'その他',
+                'link_url' => 'https://playpark.jp/komazawa/',
                 'age_range' => '幼児〜',
                 // 住所：世田谷区駒沢3-21（駒沢緑泉公園脇）
                 // 水〜日 10:00-18:00
             ],
             [
-                'title'     => '弦巻児童館',
-                'lat'       => 35.63860,
-                'lng'       => 139.65050,
-                'category'  => 'その他',
-                'link_url'  => 'https://www.city.setagaya.lg.jp/03063/8964.html',
+                'title' => '弦巻児童館',
+                'lat' => 35.63860,
+                'lng' => 139.65050,
+                'category' => 'その他',
+                'link_url' => 'https://www.city.setagaya.lg.jp/03063/8964.html',
                 'age_range' => '乳幼児〜高校生',
                 // 住所：世田谷区弦巻1-26-11（弦巻区民センター2F）
             ],
@@ -328,18 +328,18 @@ class MikkeAreaSpotSeeder extends Seeder
             Spot::firstOrCreate(
                 ['title' => $data['title']],
                 [
-                    'lat'                  => $data['lat'],
-                    'lng'                  => $data['lng'],
-                    'category'             => $data['category'],
-                    'note'                 => null,
-                    'user_id'              => $userId,
-                    'image_path'           => null,
-                    'link_url'             => $data['link_url'] ?? null,
-                    'age_range'            => $data['age_range'] ?? null,
-                    'monthly_fee_range'    => null,
-                    'has_parent_duty'      => false,
-                    'policy_type'          => null,
-                    'transfer_available'   => false,
+                    'lat' => $data['lat'],
+                    'lng' => $data['lng'],
+                    'category' => $data['category'],
+                    'note' => null,
+                    'user_id' => $userId,
+                    'image_path' => null,
+                    'link_url' => $data['link_url'] ?? null,
+                    'age_range' => $data['age_range'] ?? null,
+                    'monthly_fee_range' => null,
+                    'has_parent_duty' => false,
+                    'policy_type' => null,
+                    'transfer_available' => false,
                 ]
             );
         }

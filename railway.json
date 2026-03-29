@@ -1,0 +1,7 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {},
+  "deploy": {
+    "startCommand": "php artisan migrate --force && php artisan db:seed --force && vendor/bin/heroku-php-apache2 public/"
+  }
+}

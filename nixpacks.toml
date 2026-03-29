@@ -1,2 +1,6 @@
 [variables]
-NIXPACKS_PHP_VERSION = "8.4"
+NIXPACKS_PHP_VERSION = "8.2"
+
+[phases.setup]
+aptPkgs = ["libpq-dev"]
+nixPkgs = ["php82", "php82Extensions.pgsql", "php82Extensions.pdo_pgsql"]

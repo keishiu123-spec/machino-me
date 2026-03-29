@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#26304F">
+    <meta name="theme-color" content="#CCFF66">
     <title>みっけ | 子どもの「好き」が見つかる場所</title>
     <meta name="description" content="個人教室・スポーツ少年団・地域の習い事を地図で発見。みっけは、ネットに載っていない習い事を可視化するサービスです。">
     <meta property="og:title" content="みっけ（MIKKE）">
     <meta property="og:description" content="子どもの「好き」は、もうこの街に存在している。ただ、見えていないだけだ。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
     tailwind.config = {
@@ -38,7 +38,7 @@
                     sans:  ['Noto Sans JP', 'sans-serif'],
                 },
                 borderRadius: {
-                    card:  '12px',
+                    card:  '16px',
                     pill:  '20px',
                     input: '10px',
                 },
@@ -71,7 +71,7 @@
             --color-gold-light:  #FBF3E3;
             --font-serif: 'Noto Serif JP', serif;
             --font-sans:  'Noto Sans JP', sans-serif;
-            --radius-card:  12px;
+            --radius-card:  16px;
             --radius-pill:  20px;
             --radius-input: 10px;
         }
@@ -168,9 +168,7 @@
         .nav-item.active::after { content: ''; position: absolute; bottom: -2px; width: 4px; height: 4px;
             border-radius: 50%; background: var(--color-coral); }
 
-        /* ===== Tagline ===== */
-        .tagline-main { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 500; color: #ffffff; line-height: 1.5; margin-bottom: 2px; }
-        .tagline-sub  { font-size: 0.75rem; color: rgba(250,247,242,0.5); }
+        /* ===== Tagline (kept for non-home pages if needed) ===== */
 
         /* ===== Page transitions ===== */
         .page-content { animation: fadeUp 0.3s cubic-bezier(0.22,1,0.36,1) forwards; }
@@ -180,7 +178,7 @@
 
 {{-- Desktop brand watermark --}}
 <div class="desktop-brand fixed top-6 left-8 z-10 items-center gap-2.5 opacity-60">
-    <span class="font-serif text-sm text-ink-soft tracking-tight">みっけ</span>
+    <span style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;color:#9AA0B4;">みっけ</span>
 </div>
 <div class="desktop-brand fixed bottom-6 left-8 z-10 text-[11px] text-ink-soft font-medium opacity-60">
     子どもの「好き」は、もうこの街に存在している。
@@ -189,36 +187,22 @@
 <div class="app-shell">
 
 {{-- ===== Brand Header ===== --}}
-<header class="sticky top-0 z-[2500]" style="background-color: var(--color-ink);">
-    <div class="px-4 pt-3 pb-2.5">
-        <div class="flex items-center justify-between">
-            <a href="{{ route('home') }}" class="flex items-center gap-2 active:scale-95 transition-transform">
-                <span class="font-serif text-[1.25rem] tracking-[0.03em]" style="color: var(--color-cream);">みっけ</span>
-            </a>
-            @auth
-            <div class="flex items-center gap-2">
-                <a href="{{ route('mypage.index') }}" class="flex items-center gap-1.5 active:scale-95 transition-transform">
-                    @if(auth()->user()->display_avatar)
-                        <img src="{{ auth()->user()->display_avatar }}" alt="" class="w-7 h-7 rounded-full object-cover" style="border: 0.5px solid rgba(250,247,242,0.3);">
-                    @else
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center" style="background: rgba(250,247,242,0.15);">
-                            <span class="text-[11px] font-medium" style="color: var(--color-cream);">{{ mb_substr(auth()->user()->name, 0, 1) }}</span>
-                        </div>
-                    @endif
-                </a>
-            </div>
-            @else
-            <a href="{{ route('auth.line') }}"
-               class="flex items-center gap-1.5 bg-[#06C755] text-white text-[11px] font-medium px-3 py-1.5 rounded-pill active:scale-95 transition-all" style="border-radius: var(--radius-pill);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
-                LINEログイン
-            </a>
-            @endauth
-        </div>
+<header class="sticky top-0 z-[2500] relative overflow-hidden" style="background-color:#CCFF66;border-bottom:4px solid #E8704A;">
+    {{-- Decorative circle --}}
+    <div style="position:absolute;top:-40px;right:-20px;width:130px;height:130px;background:rgba(255,255,255,0.15);border-radius:50%;pointer-events:none;"></div>
+
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;position:relative;">
+        {{-- Logo --}}
+        <a href="{{ route('home') }}" class="active:scale-95 transition-transform" style="flex-shrink:0;">
+            <x-mikke-logo />
+        </a>
+
+        {{-- Copy — トップページのみ表示 --}}
         @if(request()->routeIs('home') || request()->routeIs('spots.index'))
-        <div class="mt-2">
-            <p class="tagline-main">子どもの「好き」は、もうこの街に存在している。</p>
-            <p class="tagline-sub">ただ、見えていないだけだ。</p>
+        <div style="flex:1;min-width:0;text-align:right;">
+            <p style="font-size:11px;font-weight:700;color:#1a1a1a;line-height:1.5;margin:0;">
+                子どもの「好き」は、<span style="color:#E8704A">もうこの街にある。</span>
+            </p>
         </div>
         @endif
     </div>
@@ -230,25 +214,26 @@
 
 </div>{{-- .app-shell --}}
 
+{{-- ===== FAB: スポット追加（登録ページ自体では非表示） ===== --}}
+@unless(request()->routeIs('spots.create'))
+<a href="{{ route('spots.create') }}"
+   class="fixed z-[2900] active:scale-95 transition-all"
+   style="bottom:80px;left:50%;transform:translateX(-50%);background:#E8704A;color:#fff;border-radius:50px;padding:14px 28px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(232,112,74,0.35);">
+    ＋ スポット
+</a>
+@endunless
+
 {{-- ===== Bottom Navigation ===== --}}
 <nav class="fixed bottom-0 left-0 right-0 z-[3000]" style="padding-bottom: env(safe-area-inset-bottom, 0px);">
     <div class="app-shell mx-auto relative" style="border:none; min-height:auto;">
-        {{-- FAB — スポット登録への直リンク --}}
-        <div class="absolute -top-7 left-1/2 -translate-x-1/2 z-[3001]">
-            <a href="{{ route('spots.create') }}"
-                class="w-[52px] h-[52px] rounded-2xl flex items-center justify-center text-white border-[3px] border-white active:scale-90 transition-all duration-200"
-                style="background: var(--color-coral);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </a>
-        </div>
-
         <div class="bottom-nav rounded-t-2xl">
             <div class="grid grid-cols-3 h-[58px] items-center">
                 @php
                     $tabs = [
                         ['route' => 'spots.index', 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>', 'label' => 'マップ', 'match' => 'spots.*,home'],
                         ['route' => null, 'icon' => '', 'label' => '', 'match' => ''],
-                        ['route' => 'mypage.index', 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>', 'label' => 'マイページ', 'match' => 'mypage.*'],
+                        // GGA demo: hidden
+                        // ['route' => 'mypage.index', 'icon' => '<svg ...>', 'label' => 'マイページ', 'match' => 'mypage.*'],
                     ];
                 @endphp
                 {{-- v2: 質問箱・アンバサダー通信タブ
