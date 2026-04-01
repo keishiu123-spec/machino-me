@@ -216,9 +216,9 @@
 
 {{-- ===== FAB: スポット追加（登録ページ自体では非表示） ===== --}}
 @unless(request()->routeIs('spots.create'))
-<a href="{{ route('spots.create') }}"
+<a id="fab-add-spot" href="{{ route('spots.create') }}"
    class="fixed z-[2900] active:scale-95 transition-all"
-   style="bottom:80px;left:50%;transform:translateX(-50%);background:#E8704A;color:#fff;border-radius:50px;padding:14px 28px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(232,112,74,0.35);">
+   style="bottom:80px;left:50%;transform:translateX(-50%);background:#E8704A;color:#fff;border-radius:50px;padding:14px 28px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(232,112,74,0.35);transition:opacity 0.3s;">
     ＋ スポット
 </a>
 @endunless

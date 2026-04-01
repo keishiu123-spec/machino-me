@@ -108,7 +108,7 @@
     <div id="detail-overlay" class="fixed inset-0 z-[5000]" style="pointer-events:none;visibility:hidden;">
         <div id="detail-backdrop" class="absolute inset-0 bg-black/0 transition-all duration-400" style="pointer-events:none;" onclick="closeDetail()"></div>
         <div id="detail-card" class="absolute inset-x-0 bottom-0 z-10" style="max-width:430px;margin:0 auto;transform:translateY(100%);transition:transform 0.45s cubic-bezier(0.32,0.72,0,1);pointer-events:none;">
-            <div class="flex flex-col" style="max-height: calc(92dvh - env(safe-area-inset-bottom, 0px)); background: var(--color-white); border-radius: 28px 28px 0 0; border-top: 0.5px solid var(--color-border);">
+            <div id="detail-inner" class="flex flex-col" style="height:90vh;max-height:90vh;background:var(--color-white);border-radius:28px 28px 0 0;border-top:0.5px solid var(--color-border);">
                 {{-- Drag handle --}}
                 <div id="detail-drag-handle" class="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing flex-shrink-0">
                     <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
@@ -123,7 +123,7 @@
                         <h2 id="hero-title" class="text-2xl font-black leading-tight"></h2>
                     </div>
                 </div>
-                <div id="detail-body" class="flex-1 overflow-y-auto overscroll-contain px-5 pt-5" style="padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));"></div>
+                <div id="detail-body" class="flex-1 overflow-y-auto overscroll-contain px-5 pt-5" style="padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 16px);-webkit-overflow-scrolling:touch;"></div>
             </div>
         </div>
     </div>
@@ -132,53 +132,55 @@
     <div id="review-overlay" class="fixed inset-0 z-[6000] hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeReviewForm()"></div>
         <div class="absolute inset-x-0 bottom-0 max-w-md mx-auto">
-            <div class="p-6" style="background: var(--color-white); border-radius: 28px 28px 0 0; border-top: 0.5px solid var(--color-border);">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-serif" style="color: var(--color-ink);">口コミを投稿</h3>
-                    <button onclick="closeReviewForm()" class="text-gray-400 hover:text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="14" y1="5" x2="5" y2="14"/><line x1="5" y1="5" x2="14" y2="14"/></svg></button>
+            <div style="height:90vh;max-height:90vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--color-white);border-radius:28px 28px 0 0;border-top:0.5px solid var(--color-border);">
+                <div style="padding:24px 24px calc(env(safe-area-inset-bottom, 0px) + 16px);">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-serif" style="color: var(--color-ink);">口コミを投稿</h3>
+                        <button onclick="closeReviewForm()" class="text-gray-400 hover:text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="14" y1="5" x2="5" y2="14"/><line x1="5" y1="5" x2="14" y2="14"/></svg></button>
+                    </div>
+                    <form id="review-form" method="POST" class="space-y-6">
+                        @csrf
+                        <input type="hidden" name="spot_id" id="review-spot-id">
+
+                        {{-- 項目1: 雰囲気 --}}
+                        <div>
+                            <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">雰囲気は？ <span class="text-red-500 text-xs">*必須</span></label>
+                            <div class="flex flex-wrap gap-3">
+                                @foreach(['ガチ勢向き','バランス','のびのび'] as $vibe)
+                                <label>
+                                    <input type="radio" name="vibe_tag" value="{{ $vibe }}" class="hidden peer">
+                                    <div class="peer-checked:bg-[#E8704A] peer-checked:text-white peer-checked:border-[#E8704A] bg-white border-2 border-gray-200 text-gray-500 rounded-[20px] py-3 px-5 text-sm font-bold cursor-pointer transition-all active:scale-95">{{ $vibe }}</div>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        {{-- 項目2: 親の関わり度 --}}
+                        <div>
+                            <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">親の関わり度は？ <span class="text-red-500 text-xs">*必須</span></label>
+                            <div class="flex flex-wrap gap-3">
+                                @foreach(['ほぼなし','月数回','毎週ある'] as $pi)
+                                <label>
+                                    <input type="radio" name="parent_involvement" value="{{ $pi }}" class="hidden peer">
+                                    <div class="peer-checked:bg-[#E8704A] peer-checked:text-white peer-checked:border-[#E8704A] bg-white border-2 border-gray-200 text-gray-500 rounded-[20px] py-3 px-5 text-sm font-bold cursor-pointer transition-all active:scale-95">{{ $pi }}</div>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        {{-- 項目3: 一言コメント --}}
+                        <div>
+                            <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">一言コメント <span class="text-gray-400 text-xs font-normal">（任意・100文字まで）</span></label>
+                            <textarea name="body" rows="2" maxlength="100" placeholder="先生がとても優しくて子どもが毎回楽しそうに通っています"
+                                class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm outline-none border-2 border-gray-200 transition-all resize-none focus:border-[#E8704A]" style="color: var(--color-ink);"></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full text-white font-bold py-4 active:scale-[0.98] transition-all text-base" style="background: #E8704A; border-radius: 20px;">
+                            口コミを送信
+                        </button>
+                    </form>
                 </div>
-                <form id="review-form" method="POST" class="space-y-6">
-                    @csrf
-                    <input type="hidden" name="spot_id" id="review-spot-id">
-
-                    {{-- 項目1: 雰囲気 --}}
-                    <div>
-                        <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">雰囲気は？ <span class="text-red-500 text-xs">*必須</span></label>
-                        <div class="flex flex-wrap gap-3">
-                            @foreach(['ガチ勢向き','バランス','のびのび'] as $vibe)
-                            <label>
-                                <input type="radio" name="vibe_tag" value="{{ $vibe }}" class="hidden peer">
-                                <div class="peer-checked:bg-[#E8704A] peer-checked:text-white peer-checked:border-[#E8704A] bg-white border-2 border-gray-200 text-gray-500 rounded-[20px] py-3 px-5 text-sm font-bold cursor-pointer transition-all active:scale-95">{{ $vibe }}</div>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    {{-- 項目2: 親の関わり度 --}}
-                    <div>
-                        <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">親の関わり度は？ <span class="text-red-500 text-xs">*必須</span></label>
-                        <div class="flex flex-wrap gap-3">
-                            @foreach(['ほぼなし','月数回','毎週ある'] as $pi)
-                            <label>
-                                <input type="radio" name="parent_involvement" value="{{ $pi }}" class="hidden peer">
-                                <div class="peer-checked:bg-[#E8704A] peer-checked:text-white peer-checked:border-[#E8704A] bg-white border-2 border-gray-200 text-gray-500 rounded-[20px] py-3 px-5 text-sm font-bold cursor-pointer transition-all active:scale-95">{{ $pi }}</div>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    {{-- 項目3: 一言コメント --}}
-                    <div>
-                        <label class="text-sm font-bold mb-3 block" style="color: var(--color-ink);">一言コメント <span class="text-gray-400 text-xs font-normal">（任意・100文字まで）</span></label>
-                        <textarea name="body" rows="2" maxlength="100" placeholder="先生がとても優しくて子どもが毎回楽しそうに通っています"
-                            class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm outline-none border-2 border-gray-200 transition-all resize-none focus:border-[#E8704A]" style="color: var(--color-ink);"></textarea>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full text-white font-bold py-4 active:scale-[0.98] transition-all text-base" style="background: #E8704A; border-radius: 20px;">
-                        口コミを送信
-                    </button>
-                </form>
             </div>
         </div>
     </div>
@@ -915,10 +917,22 @@ function initApp() {
         });
         detailOpen = true;
 
+        // Hide FAB while detail is open
+        var fab = document.getElementById('fab-add-spot');
+        if (fab) fab.style.opacity = '0';
+        if (fab) fab.style.pointerEvents = 'none';
+
         // Hide all markers while detail is open
         gMarkers.forEach(function(m){ if(m.content) m.content.style.opacity='0'; });
 
         map.panTo({ lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) });
+
+        // Fix map rendering after bottom sheet animation
+        setTimeout(function() {
+            if (window.map || map) {
+                google.maps.event.trigger(map, 'resize');
+            }
+        }, 150);
     }
 
     window.closeDetail = function() {
@@ -929,6 +943,10 @@ function initApp() {
         backdrop.style.background = 'rgba(0,0,0,0)';
 
         if(activeCardEl){ activeCardEl.classList.remove('active'); activeCardEl = null; }
+
+        // Show FAB again
+        var fab = document.getElementById('fab-add-spot');
+        if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = ''; }
 
         // Show all markers again
         gMarkers.forEach(function(m){ if(m.content) m.content.style.opacity='1'; });

@@ -348,7 +348,8 @@ document.addEventListener('DOMContentLoaded', function() {
     waitForGoogleMaps(function() {
         miniMap = new google.maps.Map(document.getElementById('mini-map'), {
             center: { lat: 35.6465, lng: 139.6533 },
-            zoom: 16, disableDefaultUI: true, zoomControl: true, gestureHandling: 'greedy'
+            zoom: 16, disableDefaultUI: true, zoomControl: true, gestureHandling: 'greedy',
+            mapId: 'MIKKE_CREATE_MAP'
         });
         marker = new google.maps.marker.AdvancedMarkerElement({
             map: miniMap, position: { lat: 35.6465, lng: 139.6533 }, gmpDraggable: true
